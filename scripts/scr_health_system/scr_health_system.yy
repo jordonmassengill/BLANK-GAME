@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_health_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_health_system",
+  "parent":{
+    "name":"scr_damage",
+    "path":"folders/Scripts/scr_damage.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
