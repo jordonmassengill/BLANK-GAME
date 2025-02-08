@@ -12,7 +12,15 @@ if (creature.current_health <= 0) {
 }
 
 // Handle hit timer
-if (hit_timer > 0) hit_timer--;
+if (hit_timer > 0) {
+    hit_timer--; // Decrement the hit timer
+    if (hit_timer <= 0) {
+        // Exit hit state
+        sprite_index = sOrchydeIdle; // Reset to idle sprite
+        is_melee_attacking = false;  // Reset attack state
+        is_shooting = false;         // Reset shooting state
+    }
+}
 
 var nearest_player = instance_nearest(x, y, obj_player_creature_parent);
 var player_in_range = false;
@@ -49,7 +57,7 @@ if (nearest_player != noone) {
         
         // Combat behavior
         if (distance_to_player <= melee_range) {
-            if (melee_cooldown <= 0 && !is_melee_attacking && !is_shooting) {
+            if (melee_cooldown <= 0 && !is_melee_attacking && !is_shooting && hit_timer <= hit_timer_max / 2) {
                 // Start melee attack
                 is_melee_attacking = true;
                 sprite_index = sOrchydeMelee;
@@ -66,7 +74,7 @@ if (nearest_player != noone) {
                 hitbox.damage = melee_damage;
                 hitbox.life_time = 15;
             }
-        } else if (!is_melee_attacking && !is_shooting && creature.shotgun_cooldown <= 0) {
+        } else if (!is_melee_attacking && !is_shooting && creature.shotgun_cooldown <= 0 && hit_timer <= hit_timer_max / 2) {
             with(obj_weapon_system) {
                 var shot_fired = shoot_shotgun(other, direction_to_player);
                 if (shot_fired) {

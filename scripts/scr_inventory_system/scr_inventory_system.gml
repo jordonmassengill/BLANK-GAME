@@ -1,13 +1,25 @@
 // scr_inventory_system
-
-function create_inventory(_slots = 10) {  // Optional parameter with default value
+function create_inventory(_slots = 16) {  // Changed default to 16
     return {
         items: array_create(_slots, undefined),
         
         add_item: function(item) {
+            // First try to stack with existing item of same type
             var len = array_length(items);
             for(var i = 0; i < len; i++) {
+                if (items[i] != undefined && items[i].type == item.type) {
+                    if (!variable_struct_exists(items[i], "count")) {
+                        items[i].count = 1;
+                    }
+                    items[i].count++;
+                    return true;
+                }
+            }
+            
+            // If no stack found, find first empty slot
+            for(var i = 0; i < len; i++) {
                 if (items[i] == undefined) {
+                    item.count = 1;  // Add count to new items
                     items[@ i] = item;
                     return true;
                 }
@@ -19,21 +31,17 @@ function create_inventory(_slots = 10) {  // Optional parameter with default val
             var len = array_length(items);
             if (slot >= 0 && slot < len) {
                 if (items[slot] != undefined) {
-                    var item = items[slot];
-                    items[@ slot] = undefined;
-                    return item;
+                    if (variable_struct_exists(items[slot], "count") && items[slot].count > 1) {
+                        items[slot].count--;
+                        return items[slot];
+                    } else {
+                        var item = items[slot];
+                        items[@ slot] = undefined;
+                        return item;
+                    }
                 }
             }
             return undefined;
-        },
-        
-        get_item_count: function() {
-            var count = 0;
-            var len = array_length(items);
-            for(var i = 0; i < len; i++) {
-                if (items[i] != undefined) count++;
-            }
-            return count;
         }
     };
 }

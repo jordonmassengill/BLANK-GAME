@@ -59,9 +59,9 @@ update_player_input = function(player_obj) {
             input.using_controller = false;
         }
     } else {
-        // Keyboard handling with similar improvements
-        input.left = keyboard_check(ord("A"));
-        input.right = keyboard_check(ord("D"));
+        // Keyboard handling with both WASD and arrow keys
+        input.left = keyboard_check(ord("A")) || keyboard_check(vk_left);
+        input.right = keyboard_check(ord("D")) || keyboard_check(vk_right);
         
         input.jump = keyboard_check(vk_space);
         input.fire = mouse_check_button(mb_left);
@@ -73,16 +73,18 @@ update_player_input = function(player_obj) {
         input.stats_menu_pressed = keyboard_check_pressed(vk_tab);
         
         // Reset delay when keys are released
-        if (!keyboard_check(vk_up) && !keyboard_check(vk_down)) {
+        if (!keyboard_check(vk_up) && !keyboard_check(vk_down) && 
+            !keyboard_check(ord("W")) && !keyboard_check(ord("S"))) {
             was_stick_neutral = true;
             menu_input_delay = 0;
         }
         
         // Handle keyboard menu navigation
-        if (keyboard_check(vk_up) || keyboard_check(vk_down)) {
+        if (keyboard_check(vk_up) || keyboard_check(vk_down) || 
+            keyboard_check(ord("W")) || keyboard_check(ord("S"))) {
             if (was_stick_neutral || menu_input_delay <= 0) {
-                input.menu_up = keyboard_check(vk_up);
-                input.menu_down = keyboard_check(vk_down);
+                input.menu_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
+                input.menu_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
                 menu_input_delay = menu_input_delay_max;
                 was_stick_neutral = false;
             } else {

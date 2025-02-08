@@ -129,18 +129,19 @@ if (stats_menu_active) {
         }
     
 			if (points_spent > 0) {
-			 show_debug_message("Removing used orbs");
-			 // Remove used orbs
-				  var orbs_removed = 0;
-				 var i = 0;
-				 var required_type = stats_list[selected_stat].upgradeable_by; // Dynamically determine the required type
-
-				 while (orbs_removed < points_spent && i < array_length(items)) {
-					  if (items[i] != undefined && items[i].type == required_type) {
-					     player.creature.inventory.remove_item(i);
-						    orbs_removed++;
-					  }
-					   i++;
+    show_debug_message("Removing used orbs");
+    // Remove used orbs
+    var orbs_removed = 0;
+    var i = 0;
+    var required_type = stats_list[selected_stat].upgradeable_by; // Dynamically determine the required type
+    var items = player.creature.inventory.items; // Get the items array first
+    
+    while (orbs_removed < points_spent && i < array_length(items)) {
+        if (items[i] != undefined && items[i].type == required_type) {
+            player.creature.inventory.remove_item(i);
+            orbs_removed++;
+        }
+        i++;
     }
 
                 // Reset points spent

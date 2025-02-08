@@ -1,9 +1,26 @@
-// obj_stats_menu Create Event
+// obj_stats_menu Create Event (adding to existing code)
+game_paused = false;
+menu_items = ["Resume", "Restart", "Quit"];
+selected_item = 0;
 stats_menu_active = false;
 upgrade_mode = false;
 scanline_offset = 0;
 points_spent = 0;
 selected_stat = 0;
+
+// Add the helper function definition
+calculate_stat_level = function(current_value, base_value, per_level_value) {
+    if (current_value < base_value) return 1;  // Always minimum level 1
+    return floor(((current_value - base_value) / per_level_value) + 1);
+};
+
+upgrade_colors = ds_map_create();
+ds_map_add(upgrade_colors, "life", make_color_rgb(255, 50, 50));     // Bright red
+ds_map_add(upgrade_colors, "power", make_color_rgb(50, 50, 255));    // Bright blue 
+ds_map_add(upgrade_colors, "manifest", make_color_rgb(255, 165, 0)); // Bright orange
+ds_map_add(upgrade_colors, "speed", make_color_rgb(50, 255, 50));    // Bright green
+ds_map_add(upgrade_colors, "defense", make_color_rgb(200, 50, 255)); // Bright purple
+
 
 // Stats to display from stats system
 stats_list = [
@@ -19,10 +36,3 @@ stats_list = [
     {name: "Armor", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"},
     {name: "Resistance", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"}
 ];
-
-upgrade_colors = ds_map_create();
-ds_map_add(upgrade_colors, "life", make_color_rgb(255, 50, 50));     // Bright red
-ds_map_add(upgrade_colors, "power", make_color_rgb(50, 50, 255));    // Bright blue 
-ds_map_add(upgrade_colors, "manifest", make_color_rgb(255, 165, 0)); // Bright orange
-ds_map_add(upgrade_colors, "speed", make_color_rgb(50, 255, 50));    // Bright green
-ds_map_add(upgrade_colors, "defense", make_color_rgb(200, 50, 255)); // Bright purple

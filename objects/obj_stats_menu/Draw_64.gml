@@ -255,54 +255,73 @@ if (stats_menu_active) {
     var slots_per_row = 8;
     
     // Draw inventory slots
-    var creature = player.creature;
-    if (is_struct(creature) && variable_struct_exists(creature, "inventory")) {
-        var items = creature.inventory.items;
-        var len = array_length(items);
+	var creature = player.creature;
+	if (is_struct(creature) && variable_struct_exists(creature, "inventory")) {
+    var items = creature.inventory.items;
+    var len = array_length(items);
+    
+    for(var i = 0; i < len; i++) {
+        var row = i div slots_per_row;
+        var col = i mod slots_per_row;
         
-        for(var i = 0; i < len; i++) {
-            var row = i div slots_per_row;
-            var col = i mod slots_per_row;
+        var slot_x = start_x + (col * (slot_size + slot_padding));
+        var slot_y = inventory_y + 50 + (row * (slot_size + slot_padding));
+        
+        // Draw slot background
+        draw_set_color(make_color_rgb(0, 40, 40));
+        draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, false);
+        
+        // Draw item if it exists
+        if (items[i] != undefined) {
+            // Draw the orb
+            draw_set_color(items[i].color);
+            draw_circle(
+                slot_x + slot_size/2,
+                slot_y + slot_size/2,
+                slot_size/3,
+                false
+            );
             
-            var slot_x = start_x + (col * (slot_size + slot_padding));
-            var slot_y = inventory_y + 50 + (row * (slot_size + slot_padding));
-            
-            // Draw slot background
-            draw_set_color(make_color_rgb(0, 40, 40));
-            draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, false);
-            
-            // Draw item if it exists
-            if (items[i] != undefined) {
-                draw_set_color(items[i].color);
-                draw_circle(
-                    slot_x + slot_size/2,
-                    slot_y + slot_size/2,
-                    slot_size/3,
-                    false
+            // Draw count if more than 1
+            if (variable_struct_exists(items[i], "count") && items[i].count > 1) {
+                draw_set_color(c_white);
+                draw_set_halign(fa_right);
+                draw_set_valign(fa_top);
+                draw_text_transformed(
+                    slot_x + slot_size - 5,
+                    slot_y + 5,
+                    string(items[i].count),
+                    0.8,
+                    0.8,
+                    0
                 );
+                // Reset alignment
+                draw_set_halign(fa_left);
+                draw_set_valign(fa_top);
             }
-            
-            // Draw slot border with cyber effect
-            draw_set_color(make_color_rgb(0, 200, 200));
-            draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, true);
-            
-            // Draw corner accents
-            var accent_size = 5;
-            draw_set_color(make_color_rgb(0, 255, 255));
-            // Top-left
-            draw_line(slot_x, slot_y, slot_x + accent_size, slot_y);
-            draw_line(slot_x, slot_y, slot_x, slot_y + accent_size);
-            // Top-right
-            draw_line(slot_x + slot_size - accent_size, slot_y, slot_x + slot_size, slot_y);
-            draw_line(slot_x + slot_size, slot_y, slot_x + slot_size, slot_y + accent_size);
-            // Bottom-left
-            draw_line(slot_x, slot_y + slot_size - accent_size, slot_x, slot_y + slot_size);
-            draw_line(slot_x, slot_y + slot_size, slot_x + accent_size, slot_y + slot_size);
-            // Bottom-right
-            draw_line(slot_x + slot_size - accent_size, slot_y + slot_size, slot_x + slot_size, slot_y + slot_size);
-            draw_line(slot_x + slot_size, slot_y + slot_size - accent_size, slot_x + slot_size, slot_y + slot_size);
         }
+        
+        // Draw slot border with cyber effect
+        draw_set_color(make_color_rgb(0, 200, 200));
+        draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, true);
+        
+        // Draw corner accents
+        var accent_size = 5;
+        draw_set_color(make_color_rgb(0, 255, 255));
+        // Top-left
+        draw_line(slot_x, slot_y, slot_x + accent_size, slot_y);
+        draw_line(slot_x, slot_y, slot_x, slot_y + accent_size);
+        // Top-right
+        draw_line(slot_x + slot_size - accent_size, slot_y, slot_x + slot_size, slot_y);
+        draw_line(slot_x + slot_size, slot_y, slot_x + slot_size, slot_y + accent_size);
+        // Bottom-left
+        draw_line(slot_x, slot_y + slot_size - accent_size, slot_x, slot_y + slot_size);
+        draw_line(slot_x, slot_y + slot_size, slot_x + accent_size, slot_y + slot_size);
+        // Bottom-right
+        draw_line(slot_x + slot_size - accent_size, slot_y + slot_size, slot_x + slot_size, slot_y + slot_size);
+        draw_line(slot_x + slot_size, slot_y + slot_size - accent_size, slot_x + slot_size, slot_y + slot_size);
     }
+}
     
     // Reset drawing properties
     draw_set_alpha(1);
