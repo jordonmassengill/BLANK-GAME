@@ -19,7 +19,7 @@ color_background = make_colour_rgb(0, 10, 20);  // Dark blue
 color_highlight = make_colour_rgb(255, 255, 0); // Yellow
 
 // Define valid orb types
-valid_types = ["life", "power", "speed", "defense", "manifest", "blank"];
+valid_types = ["life", "power", "speed", "defense", "manifest", "finesse", "blank"];
 
 // Orb types configuration
 orb_types = [
@@ -27,7 +27,8 @@ orb_types = [
     {name: "POWER ORB", color: make_colour_rgb(50, 50, 255), type: "power"},    // Bright blue
     {name: "SPEED ORB", color: make_colour_rgb(50, 255, 50), type: "speed"},    // Bright green
     {name: "DEFENSE ORB", color: make_colour_rgb(200, 50, 255), type: "defense"},  // Bright purple
-    {name: "MANIFEST ORB", color: make_colour_rgb(255, 165, 0), type: "manifest"}  // Bright orange
+    {name: "MANIFEST ORB", color: make_colour_rgb(255, 165, 0), type: "manifest"},  // Bright orange
+    {name: "FINESSE ORB", color: make_colour_rgb(139, 69, 19), type: "finesse"}  // Brown
 ];
 
 // Grid effect setup

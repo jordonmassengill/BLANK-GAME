@@ -1,7 +1,7 @@
-// scr_projectile_system
+// In scr_projectile_system
 function create_base_projectile() {
     return {
-        // Base stats that should be overridden by specific projectiles
+        // Existing properties
         base_speed: 0,
         base_lifetime: 0,
         base_damage: 0,
@@ -12,9 +12,12 @@ function create_base_projectile() {
         element_type: ELEMENT_TYPE.NONE,
         shooter: noone,
         projectile_props: undefined,
-        can_hit_player: false,  // Flag to determine if this can hit players
+        can_hit_player: false,
+        
+        // New crit property
+        is_crit: false,
 
-        // Initialize the projectile with specific values
+        // Existing initialize method remains unchanged...
         initialize: function(config) {
             self.base_speed = variable_struct_exists(config, "speed") ? config[$ "speed"] : self.base_speed;
             self.base_lifetime = variable_struct_exists(config, "lifetime") ? config[$ "lifetime"] : self.base_lifetime;
@@ -36,14 +39,20 @@ function create_base_projectile() {
             if (!variable_instance_exists(shooter_obj, "creature")) return;
 
             self.shooter = shooter_obj;
-
             var stats = shooter_obj.creature.stats;
+            
+            // Check for and apply crit
+            if (stats.crit_ready) {
+                self.is_crit = true;
+                stats.consume_crit();
+            }
+
             var proj_speed_mult = stats.get_proj_speed();
             self.speed = self.base_speed * proj_speed_mult;
             self.lifetime = self.base_lifetime * sqrt(proj_speed_mult);
         },
 
-        // Returns true if the projectile should be destroyed
+        // Update method remains unchanged...
         update: function() {
             self.lifetime -= 1;
             return (self.lifetime <= 0);
@@ -51,15 +60,20 @@ function create_base_projectile() {
 
         on_hit: function(target) {
             if (!variable_instance_exists(target, "creature")) return false;
-
             if (self.shooter == target) return false;
 
             var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
+            
+            // Apply crit multiplier if this is a crit shot
+            if (self.is_crit && self.shooter != noone && 
+                variable_instance_exists(self.shooter, "creature")) {
+                final_damage *= self.shooter.creature.stats.get_crit_multiplier();
+            }
+            
             var damage_to_apply = final_damage;
             var proj_shooter = self.shooter;
             var proj_props = self.projectile_props;
 
-            // Use global.health_system for damage
             var actual_damage = global.health_system.damage_creature(target, damage_to_apply);
 
             if (proj_shooter != noone) {
@@ -70,7 +84,7 @@ function create_base_projectile() {
                 apply_status_effects(target, proj_props, proj_shooter);
             }
 
-            return true;  // Return true to indicate the hit was successful
+            return true;
         }
     };
 }

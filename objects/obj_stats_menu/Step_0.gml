@@ -32,121 +32,115 @@ if (stats_menu_active) {
     }
 
     // Handle upgrades in upgrade mode
-	
-	if (upgrade_mode) {
-    var available_points = 0;
-    var creature = player.creature;
-    var upgrade_type = stats_list[selected_stat].upgradeable_by;
+    if (upgrade_mode) {
+        var available_points = 0;
+        var creature = player.creature;
+        var upgrade_type = stats_list[selected_stat].upgradeable_by;
 
-    // Calculate available points for the current upgrade type
-    if (is_struct(creature) && variable_struct_exists(creature, "inventory")) {
-        var items = creature.inventory.items;
-        for (var i = 0; i < array_length(items); i++) {
-            if (items[i] != undefined && items[i].type == upgrade_type) {
-                available_points++;
+        // Calculate available points for the current upgrade type
+        if (is_struct(creature) && variable_struct_exists(creature, "inventory")) {
+            var items = creature.inventory.items;
+            for (var i = 0; i < array_length(items); i++) {
+                if (items[i] != undefined && items[i].type == upgrade_type) {
+                    available_points++;
+                }
             }
         }
-    }
 
-    var selected = stats_list[selected_stat];
-    if (player.creature.input.menu_select && 
-        available_points > points_spent) {
-        
-        switch (selected.name) {
-            // Life upgrades
-            case "Max Health":
-                player.creature.max_health += 50;
-                player.creature.current_health += 50;
-                points_spent++;
-                show_debug_message("Upgraded Max Health");
-                break;
-                
-            case "Life Steal":
-                player.creature.stats.life_steal_bonus += 0.05;
-                points_spent++;
-                show_debug_message("Upgraded Life Steal");
-                break;
-                
-            case "Regeneration":
-                player.creature.stats.health_regen += 1;
-                points_spent++;
-                show_debug_message("Upgraded Regeneration");
-                break;
+        var selected = stats_list[selected_stat];
+        if (player.creature.input.menu_select && 
+            available_points > points_spent) {
+            
+            switch (selected.name) {
+                // Life upgrades
+                case "Max Health":
+                    player.creature.max_health += 50;
+                    player.creature.current_health += 50;
+                    points_spent++;
+                    break;
+                    
+                case "Life Steal":
+                    player.creature.stats.life_steal_bonus += 0.05;
+                    points_spent++;
+                    break;
+                    
+                case "Regeneration":
+                    player.creature.stats.health_regen += 1;
+                    points_spent++;
+                    break;
 
-            // Speed upgrades
-            case "Move Speed":
-                player.creature.stats.move_speed += 0.25; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Move Speed");
-                break;
+                // Speed upgrades
+                case "Move Speed":
+                    player.creature.stats.move_speed += 0.25;
+                    points_spent++;
+                    break;
 
-            case "Rate of Fire":
-                player.creature.stats.rate_of_fire += 0.25; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Rate of Fire");
-                break;
+                case "Rate of Fire":
+                    player.creature.stats.rate_of_fire += 0.25;
+                    points_spent++;
+                    break;
 
-            case "Projectile Speed":
-                player.creature.stats.proj_speed += 0.25; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Projectile Speed");
-                break;
-				
-			// Power upgrades
-            case "Physical Damage":
-                player.creature.stats.physical_damage += 1; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Physical Damage");
-                break;
+                case "Projectile Speed":
+                    player.creature.stats.proj_speed += 0.25;
+                    points_spent++;
+                    break;
+                    
+                // Power upgrades
+                case "Physical Damage":
+                    player.creature.stats.physical_damage += 1;
+                    points_spent++;
+                    break;
 
-            case "Magical Damage":
-                player.creature.stats.magical_damage += 1; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Magical Damage");
-                break;
+                case "Magical Damage":
+                    player.creature.stats.magical_damage += 1;
+                    points_spent++;
+                    break;
 
+                // Manifest upgrades
+                case "Elemental Power":
+                    player.creature.stats.elemental_power += 1;
+                    points_spent++;
+                    break;
 
-			// Manifest upgrades
-            case "Elemental Power":
-                player.creature.stats.elemental_power += 1; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Elemental Power");
-                break;
+                // Defense upgrades
+                case "Armor":
+                    player.creature.stats.armor += 1;
+                    points_spent++;
+                    break;
 
-			// Defense upgrades
-            case "Armor":
-                player.creature.stats.armor += 1; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Armor");
-                break;
+                case "Resistance":
+                    player.creature.stats.resistance += 1;
+                    points_spent++;
+                    break;
 
-            case "Resistance":
-                player.creature.stats.resistance += 1; // Adjust value as needed
-                points_spent++;
-                show_debug_message("Upgraded Resistance");
-                break;
-
-        }
+                // Finesse upgrade
+                case "Crit Level":
+                    if (player.creature.stats.crit_level < 10) {  // Ensure we don't exceed level 10
+                        player.creature.stats.crit_level += 1;
+                        points_spent++;
+                        show_debug_message("Upgraded Crit Level to: " + string(player.creature.stats.crit_level));
+                    }
+                    break;
+            }
     
-			if (points_spent > 0) {
-    show_debug_message("Removing used orbs");
-    // Remove used orbs
-    var orbs_removed = 0;
-    var i = 0;
-    var required_type = stats_list[selected_stat].upgradeable_by; // Dynamically determine the required type
-    var items = player.creature.inventory.items; // Get the items array first
-    
-    while (orbs_removed < points_spent && i < array_length(items)) {
-        if (items[i] != undefined && items[i].type == required_type) {
-            player.creature.inventory.remove_item(i);
-            orbs_removed++;
-        }
-        i++;
-    }
+            if (points_spent > 0) {
+                show_debug_message("Removing used orbs");
+                // Remove used orbs
+                var orbs_removed = 0;
+                var i = 0;
+                var required_type = stats_list[selected_stat].upgradeable_by;
+                var items = player.creature.inventory.items;
+                
+                while (orbs_removed < points_spent && i < array_length(items)) {
+                    if (items[i] != undefined && items[i].type == required_type) {
+                        player.creature.inventory.remove_item(i);
+                        orbs_removed++;
+                    }
+                    i++;
+                }
 
                 // Reset points spent
                 points_spent = 0;
-               
             }
         }
         

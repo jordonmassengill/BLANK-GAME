@@ -11,6 +11,8 @@ function create_player_properties() {
     // Health System
     props.max_health = 150;
     props.current_health = 150;
+	
+	props.stats.crit_level = 2;  // Start with level 2 crit
     
     // Add inventory
     props.inventory = create_inventory();  // Start with 10 slots

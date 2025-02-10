@@ -1,4 +1,4 @@
-// obj_stats_menu Create Event (adding to existing code)
+// obj_stats_menu Create Event
 game_paused = false;
 menu_items = ["Resume", "Restart", "Quit"];
 selected_item = 0;
@@ -20,7 +20,7 @@ ds_map_add(upgrade_colors, "power", make_color_rgb(50, 50, 255));    // Bright b
 ds_map_add(upgrade_colors, "manifest", make_color_rgb(255, 165, 0)); // Bright orange
 ds_map_add(upgrade_colors, "speed", make_color_rgb(50, 255, 50));    // Bright green
 ds_map_add(upgrade_colors, "defense", make_color_rgb(200, 50, 255)); // Bright purple
-
+ds_map_add(upgrade_colors, "finesse", make_color_rgb(139, 69, 19));  // Brown
 
 // Stats to display from stats system
 stats_list = [
@@ -34,5 +34,6 @@ stats_list = [
     {name: "Rate of Fire", base: 1.0, per_level: 0.25, level: 1, upgradeable_by: "speed"},
     {name: "Projectile Speed", base: 1.0, per_level: 0.25, level: 1, upgradeable_by: "speed"},
     {name: "Armor", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"},
-    {name: "Resistance", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"}
+    {name: "Resistance", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"},
+    {name: "Crit Level", base: 1, per_level: 1, level: 1, upgradeable_by: "finesse"}
 ];
