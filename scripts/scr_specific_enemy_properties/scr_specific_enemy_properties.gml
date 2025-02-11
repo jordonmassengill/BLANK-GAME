@@ -8,6 +8,7 @@ function create_ghost_properties() {
     props.current_health = 200;
     props.detection_range = 250;    // Ghosts can detect from further away
     props.aggro_range = 200;        // Ghosts have larger aggro range
+	props.currency_value = 46;
     
     // Add shooting properties
     props.can_shoot_ghostball = true;
@@ -43,6 +44,7 @@ function create_orchyde_properties() {
     props.stats.armor = 10;
     props.stats.resistance = 10;
 	props.stats.move_speed = 2;
+	props.currency_value = 181;
     
     // Shotgun properties
     props.has_shotgun = true;

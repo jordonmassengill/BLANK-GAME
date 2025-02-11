@@ -103,6 +103,7 @@
     {"id":{"name":"obj_Blankorb","path":"objects/obj_Blankorb/obj_Blankorb.yy",},},
     {"id":{"name":"obj_Blankshard","path":"objects/obj_Blankshard/obj_Blankshard.yy",},},
     {"id":{"name":"obj_creature_parent","path":"objects/obj_creature_parent/obj_creature_parent.yy",},},
+    {"id":{"name":"obj_currency_display","path":"objects/obj_currency_display/obj_currency_display.yy",},},
     {"id":{"name":"obj_death_screen","path":"objects/obj_death_screen/obj_death_screen.yy",},},
     {"id":{"name":"obj_debug_stats","path":"objects/obj_debug_stats/obj_debug_stats.yy",},},
     {"id":{"name":"obj_Defenseupgrade","path":"objects/obj_Defenseupgrade/obj_Defenseupgrade.yy",},},
