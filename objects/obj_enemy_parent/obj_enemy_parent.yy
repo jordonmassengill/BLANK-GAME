@@ -12,8 +12,8 @@
     "path":"folders/Objects/obj_creatures/obj_creature_parents.yy",
   },
   "parentObjectId":{
-    "name":"obj_nonplayer_creature_parent",
-    "path":"objects/obj_nonplayer_creature_parent/obj_nonplayer_creature_parent.yy",
+    "name":"obj_creature_parent",
+    "path":"objects/obj_creature_parent/obj_creature_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

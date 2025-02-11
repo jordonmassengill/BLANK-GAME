@@ -7,6 +7,3 @@ if (projectile.update() || place_meeting(x, y, obj_floor)) {
 // Update actual sprite position
 x += lengthdir_x(projectile.speed, direction);
 y += lengthdir_y(projectile.speed, direction);
-
-// obj_projectile_parent Outside Room Event
-instance_destroy();

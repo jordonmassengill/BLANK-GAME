@@ -1,19 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"obj_nonplayer_creature_parent",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_Martin",
+  "eventList":[],
   "managed":true,
-  "name":"obj_nonplayer_creature_parent",
+  "name":"obj_Martin",
   "overriddenProperties":[],
   "parent":{
-    "name":"obj_creature_parents",
-    "path":"folders/Objects/obj_creatures/obj_creature_parents.yy",
+    "name":"obj_npcs",
+    "path":"folders/Objects/obj_creatures/obj_npcs.yy",
   },
   "parentObjectId":{
-    "name":"obj_creature_parent",
-    "path":"objects/obj_creature_parent/obj_creature_parent.yy",
+    "name":"obj_npc_parent",
+    "path":"objects/obj_npc_parent/obj_npc_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -32,7 +30,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"sMartinIdle",
+    "path":"sprites/sMartinIdle/sMartinIdle.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

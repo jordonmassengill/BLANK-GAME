@@ -1,19 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"obj_OrchydeDeath",
+  "%Name":"obj_npc_parent",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":7,"eventType":7,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_OrchydeDeath",
+  "name":"obj_npc_parent",
   "overriddenProperties":[],
   "parent":{
-    "name":"Orchyde",
-    "path":"folders/Objects/obj_creatures/obj_enemies/Orchyde.yy",
+    "name":"obj_creature_parents",
+    "path":"folders/Objects/obj_creatures/obj_creature_parents.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_creature_parent",
+    "path":"objects/obj_creature_parent/obj_creature_parent.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -31,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"sOrchydeDeath",
-    "path":"sprites/sOrchydeDeath/sOrchydeDeath.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

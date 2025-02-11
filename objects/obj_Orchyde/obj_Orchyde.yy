@@ -12,7 +12,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Orchyde",
-    "path":"folders/Objects/obj_creatures/obj_nonplayers/obj_enemies/Orchyde.yy",
+    "path":"folders/Objects/obj_creatures/obj_enemies/Orchyde.yy",
   },
   "parentObjectId":{
     "name":"obj_enemy_parent",

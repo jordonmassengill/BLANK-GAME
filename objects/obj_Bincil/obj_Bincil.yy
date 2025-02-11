@@ -7,7 +7,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Bincil",
-    "path":"folders/Objects/obj_creatures/obj_nonplayers/obj_enemies/Bincil.yy",
+    "path":"folders/Objects/obj_creatures/obj_enemies/Bincil.yy",
   },
   "parentObjectId":{
     "name":"obj_enemy_parent",
