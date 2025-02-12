@@ -55,6 +55,9 @@ update_player_input = function(player_obj) {
         input.menu_select = gamepad_button_check_pressed(0, gp_face1);
         input.menu_back = gamepad_button_check_pressed(0, gp_face2);
         
+        // New interact input for opening the shop
+        input.interact = gamepad_button_check_pressed(0, gp_face4); // Y button
+        
         if (mouse_check_button_pressed(mb_left)) {
             input.using_controller = false;
         }
@@ -98,8 +101,11 @@ update_player_input = function(player_obj) {
         
         if (menu_input_delay > 0) menu_input_delay--;
         
-        input.menu_select = keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_space);
+        input.menu_select = keyboard_check_pressed(vk_enter);
         input.menu_back = keyboard_check_pressed(vk_escape);
+        
+        // New interact input for opening the shop
+        input.interact = keyboard_check_pressed(vk_space); // Use space bar to interact
         
         if (gamepad_button_check_pressed(0, gp_start)) {
             input.using_controller = true;

@@ -28,9 +28,3 @@ if (variable_instance_exists(id, "creature")) {
         creature.input.fire = false;
     }
 }
-
-// Update projectile detector position
-if (variable_instance_exists(id, "projectile_detector")) {
-    projectile_detector.x = x;
-    projectile_detector.y = y;
-}

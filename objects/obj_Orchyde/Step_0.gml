@@ -1,25 +1,6 @@
 // obj_Orchyde Step Event
 event_inherited();
 
-// Death check
-if (creature.current_health <= 0) {
-    var player = instance_find(obj_player_creature_parent, 0);
-    if (player != noone) {
-        show_debug_message("Before currency add: " + string(player.creature.currency));
-        player.creature.currency += creature.currency_value;
-        show_debug_message("After currency add: " + string(player.creature.currency));
-        show_debug_message("Added currency value: " + string(creature.currency_value));
-    }
-    
-    // Create death effect and destroy self
-    var death_effect = instance_create_layer(x, y, "Instances", obj_OrchydeDeath);
-    death_effect.sprite_index = sOrchydeDeath;
-    death_effect.image_xscale = image_xscale;
-    creature.status_manager.clear_effects();
-    instance_destroy();
-    exit;
-}
-
 // Handle hit timer
 if (hit_timer > 0) {
     hit_timer--; // Decrement the hit timer

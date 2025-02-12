@@ -171,6 +171,7 @@
     {"id":{"name":"scr_inventory_system","path":"scripts/scr_inventory_system/scr_inventory_system.yy",},},
     {"id":{"name":"scr_player_properties","path":"scripts/scr_player_properties/scr_player_properties.yy",},},
     {"id":{"name":"scr_projectile_system","path":"scripts/scr_projectile_system/scr_projectile_system.yy",},},
+    {"id":{"name":"scr_shop","path":"scripts/scr_shop/scr_shop.yy",},},
     {"id":{"name":"scr_specific_enemy_properties","path":"scripts/scr_specific_enemy_properties/scr_specific_enemy_properties.yy",},},
     {"id":{"name":"scr_stats_system","path":"scripts/scr_stats_system/scr_stats_system.yy",},},
     {"id":{"name":"scr_status_system","path":"scripts/scr_status_system/scr_status_system.yy",},},

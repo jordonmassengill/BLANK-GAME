@@ -75,24 +75,33 @@ function create_damage_number_manager() {
         },
         
         add_number: function(target_id, amount, is_healing) {
-            var map = is_healing ? healing_numbers : damage_numbers;
-            
-            if (ds_map_exists(map, target_id)) {
-                var existing_number = map[? target_id];
-                existing_number.value += amount;
-                existing_number.reset_animation();  // Reset animation when adding value
-            } else {
-                var number = create_floating_number();
-                if (instance_exists(target_id)) {
-                    var target = target_id;
-                    number.initialize(amount, 
-                                   target.x + (is_healing ? 20 : -20),
-                                   target.y - target.sprite_height,
-                                   is_healing);
-                    ds_map_add(map, target_id, number);
-                }
-            }
-        },
+    var map = is_healing ? healing_numbers : damage_numbers;
+    
+    if (ds_map_exists(map, target_id)) {
+        var existing_number = map[? target_id];
+        existing_number.value += amount;
+        
+        // Update position to match target's new position
+        if (instance_exists(target_id)) {
+            var target = target_id;
+            existing_number.x = target.x + (is_healing ? 20 : -20);
+            existing_number.y = target.y - target.sprite_height;
+            existing_number.base_y = existing_number.y;  // Update base_y too
+        }
+        
+        existing_number.reset_animation();
+    } else {
+        var number = create_floating_number();
+        if (instance_exists(target_id)) {
+            var target = target_id;
+            number.initialize(amount, 
+                           target.x + (is_healing ? 20 : -20),
+                           target.y - target.sprite_height,
+                           is_healing);
+            ds_map_add(map, target_id, number);
+        }
+    }
+},
         
         draw: function() {
             draw_set_halign(fa_center);

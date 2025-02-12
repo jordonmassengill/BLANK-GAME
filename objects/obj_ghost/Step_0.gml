@@ -1,32 +1,25 @@
 // obj_ghost Step Event
 event_inherited();
 
-// Death check
-if (creature.current_health <= 0) {
-    // Give currency directly to the player
-    var player = instance_find(obj_player_creature_parent, 0);
-    if (player != noone) {
-        player.creature.currency += creature.currency_value;
-    }
+// If ghost has a valid target within range
+if (closest_target != noone && closest_distance <= creature.detection_range) {
+    // Calculate direction to target for shooting
+    var direction_to_target = point_direction(x, y, closest_target.x, closest_target.y);
     
-    // Just destroy since ghost doesn't have a death animation
-    instance_destroy();
-    exit;
-}
-
-// Find nearest player
-var nearest_player = instance_nearest(x, y, obj_player_creature_parent);
-if (nearest_player != noone) {
-    var distance_to_player = point_distance(x, y, nearest_player.x, nearest_player.y);
-    
-    // Check if player is in range
-    if (distance_to_player <= creature.detection_range) {
-        // Calculate direction to player
-        var direction_to_player = point_direction(x, y, nearest_player.x, nearest_player.y);
-        
-        // Try to shoot ghostball using weapon system
+    // Try to shoot if cooldown is ready
+    if (creature.ghostball_cooldown <= 0) {  // Removed the is_shooting check here
         with(obj_weapon_system) {
-            shoot_ghostball(other, direction_to_player);
+            var shot_fired = shoot_ghostball(other, direction_to_target);
+            if (shot_fired) {
+                other.is_shooting = true;
+                other.sprite_index = sGhost;  // Change this to shooting sprite if you have one
+                other.image_index = 0;
+            }
         }
     }
+}
+
+// Reset shooting state after cooldown is back
+if (creature.ghostball_cooldown <= 0) {
+    is_shooting = false;
 }
