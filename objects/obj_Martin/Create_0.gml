@@ -1,4 +1,4 @@
-// obj_Martin Create Event
+// obj_Martin Create Event (parent = obj_npc_parent)
 event_inherited();
 
 // Create creature properties
@@ -10,13 +10,21 @@ creature.current_health = 100;
 creature.stats.armor = 5;
 creature.stats.resistance = 5;
 
-// Keep existing movement properties
-walk_speed = 0.5;  // Slow walking speed
-direction = choose(0, 180);  // Start walking left or right
+// Movement and patrol properties
+walk_speed = 0.5;
+direction = choose(0, 180);
+moving_right = (direction == 0);
+is_patrolling = true;
+patrol_point_left = x - 100;
+patrol_point_right = x + 100;
+edge_check_dist = 32;
+is_shooting = false;
+is_melee_attacking = false;
+player_in_range = false;
+
+// Sprite properties
 sprite_index = sMartinWalk;
 image_speed = 1;
-
-// Set initial sprite direction
 image_xscale = (direction == 0) ? 1 : -1;
 
 // Create shop inventory

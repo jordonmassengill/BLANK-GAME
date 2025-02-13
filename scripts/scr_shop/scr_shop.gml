@@ -141,21 +141,21 @@ function shop_menu_draw(menu, shop, x, y) {
     draw_text_transformed(inventory_x, inventory_y, "INVENTORY", 1.5, 1.5, 0);
     
     if (player != noone) {
-        var inventory_items = player.creature.inventory.items;
-        var inv_y = inventory_y + 40;
-        
-        for (var i = 0; i < array_length(inventory_items); i++) {
-            if (inventory_items[i] != undefined) {
-                var item = inventory_items[i];
-                draw_set_color(c_white);
-                draw_text(inventory_x, inv_y, item.name);
-                if (variable_struct_exists(item, "count")) {
-                    draw_text(inventory_x + 150, inv_y, "x" + string(item.count));
-                }
-                inv_y += 30;
+    var inventory_items = player.creature.inventory.items;
+    var inv_y = inventory_y + 40;
+    
+    for (var i = 0; i < array_length(inventory_items); i++) {
+        var item = inventory_items[i];
+        if (item != undefined && is_struct(item)) {  // Add this check
+            draw_set_color(c_white);
+            draw_text(inventory_x, inv_y, item.name);
+            if (variable_struct_exists(item, "count")) {
+                draw_text(inventory_x + 150, inv_y, "x" + string(item.count));
             }
+            inv_y += 30;
         }
     }
+}
     
     // Draw controls
 draw_set_color(c_gray);

@@ -6,5 +6,5 @@ projectile.initialize({
     lifetime: 40,
     damage: 10,
     damage_type: DAMAGE_TYPE.MAGICAL,
-    element_type: ELEMENT_TYPE.NONE
+    element_type: ELEMENT_TYPE.FIRE
 });

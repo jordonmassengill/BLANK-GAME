@@ -1,4 +1,4 @@
-// obj_enemy_parent Step Event
+// obj_enemy_parent Step Event (parent = obj_creature_parent)
 event_inherited();
 
 // Find nearest player and NPC
@@ -48,7 +48,7 @@ if (creature.current_health <= 0) {
         player.creature.currency += creature.currency_value;
     }
     
-    // Call enemy-specific death event
-    event_user(0);
+    // Instead of directly calling event_user(0), destroy the instance
+    instance_destroy();
     exit;
 }

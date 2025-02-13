@@ -119,17 +119,18 @@ for (var i = 0; i < array_length(stats_list); i++) {
             current_value = stats.get_resistance();
             current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
             break;
-        case "Crit Level":
-            current_value = stats.crit_level;
-            current_level = current_value;
-            if (current_level > 1) {
-                var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds
-                var multiplier = 1 + ((current_level - 1) * 0.25);
-                value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
-            } else {
-                value_text = "Inactive";
-            }
-            break;
+    case "Crit Level":
+    current_value = stats.crit_level;
+    current_level = current_value;
+    var value_text = "N/A";  // Initialize with a default value
+    if (current_level > 1) {
+        var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds
+        var multiplier = 1 + ((current_level - 1) * 0.25);
+        value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
+    } else {
+        value_text = "Inactive";
+    }
+    break;
     }
 
     // In upgrade mode, check for available upgrades
@@ -179,44 +180,67 @@ for (var i = 0; i < array_length(stats_list); i++) {
             }
         }
     }
+	// Calculate available points for current stat
+var available_points = 0;
+if (upgrade_mode) {
+    var required_type = stat.upgradeable_by;
+    var items = player.creature.inventory.items;
+
+    // Count available points for the required type
+    for (var j = 0; j < array_length(items); j++) {
+        if (items[j] != undefined && items[j].type == required_type) {
+            available_points++;
+        }
+    }
+}
+	
+	
 
     // Regular stat drawing (non-upgrade highlighting)
-    if (i == selected_stat) {
-        if (!upgrade_mode || available_points <= points_spent) {
-            // Default cyan selection color when not upgradeable
-            draw_set_color(make_color_rgb(0, 255, 255));
-            draw_set_alpha(0.3);
-            for(var g = 0; g < 360; g += 45) {
-                draw_text_transformed(
-                    start_x + lengthdir_x(2, g), 
-                    y_pos + lengthdir_y(2, g),
-                    stat.name + " (Level " + string(current_level) + ")", 
-                    1.5, 1.5, 0
-                );
-            }
-        }
-        draw_set_alpha(1);
-        draw_text_transformed(start_x - 40, y_pos, ">", 2, 2, 0);
+if (i == selected_stat) {
+    if (!upgrade_mode || available_points <= points_spent) {
+        // Default cyan selection color when not upgradeable
         draw_set_color(make_color_rgb(0, 255, 255));
-    } else {
-        draw_set_color(c_white);
+        draw_set_alpha(0.3);
+        for(var g = 0; g < 360; g += 45) {
+            draw_text_transformed(
+                start_x + lengthdir_x(2, g), 
+                y_pos + lengthdir_y(2, g),
+                stat.name + " (Level " + string(current_level) + ")", 
+                1.5, 1.5, 0
+            );
+        }
     }
+    draw_set_alpha(1);
+    draw_text_transformed(start_x - 40, y_pos, ">", 2, 2, 0);
+    draw_set_color(make_color_rgb(0, 255, 255));
+} else {
+    draw_set_color(c_white);
+}
 
     // Draw stat name and level
     draw_set_alpha(1);
     draw_text_transformed(start_x, y_pos, stat.name + " (Level " + string(current_level) + ")", 1.5, 1.5, 0);
     
     // Draw current value
-    if (stat.name == "Crit Level") {
-        draw_set_color(c_white);
-        draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0);
+    var value_text = "Unknown";  // Initialize with default value
+if (stat.name == "Crit Level") {
+    if (current_level > 1) {
+        var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds
+        var multiplier = 1 + ((current_level - 1) * 0.25);
+        value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
     } else {
-        value_text = stat.name == "Life Steal" ? 
-            string_format(current_value, 1, 1) + "%" :
-            string_format(current_value, 1, 2);
-        draw_set_color(c_white);
-		draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0);
+        value_text = "Inactive";
     }
+} else {
+    value_text = stat.name == "Life Steal" ? 
+        string_format(current_value, 1, 1) + "%" :
+        string_format(current_value, 1, 2);
+}
+
+// Draw current value
+draw_set_color(c_white);
+draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0);
     
     // Draw level bar
     var bar_x = start_x + 650;

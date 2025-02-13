@@ -7,7 +7,6 @@ if (shop_menu[? "active"]) {
     if (player != noone) {
         shop_menu_update(shop_menu, shop, player);
         
-        // Handle closing shop with back button
         if (player.creature.input.menu_back) {
             shop_menu[? "active"] = false;
             instance_activate_all();
@@ -24,7 +23,6 @@ if (!shop_menu[? "active"]) {
         var center_threshold = 32;
 
         if (abs(platform_center - player_center) <= center_threshold) {
-            // Check for either keyboard space or controller Y button
             if (player.creature.input.interact) {
                 shop_menu[? "active"] = true;
                 shop_menu[? "selected_item"] = 0;
@@ -32,7 +30,6 @@ if (!shop_menu[? "active"]) {
                 instance_activate_object(obj_Martin);
                 instance_activate_object(obj_input_manager);
                 instance_activate_object(player);
-                show_debug_message("Shop menu activated!"); // Debug message
             }
         }
     }
@@ -40,17 +37,25 @@ if (!shop_menu[? "active"]) {
 
 // Handle walking and basic movement
 if (!shop_menu[? "active"]) {
-    x += lengthdir_x(walk_speed, direction);
-
-    // Check for collisions or edges
-    if (place_meeting(x + lengthdir_x(walk_speed, direction), y, obj_floor)) {
-        direction = direction == 0 ? 180 : 0;  // Turn around
-        image_xscale = (direction == 0) ? 1 : -1;  // Flip sprite
-    }
-
-    // Change direction randomly sometimes
-    if (random(1) < 0.005) {  // 0.5% chance per step to turn around
-        direction = direction == 0 ? 180 : 0;
-        image_xscale = (direction == 0) ? 1 : -1;
+    if (moving_right) {
+        x += walk_speed;
+        image_xscale = 1;
+        
+        // Check for floor ahead
+        var has_floor_ahead = position_meeting(x + edge_check_dist, y + sprite_height + 2, obj_floor);
+        if (!has_floor_ahead || x >= patrol_point_right) {
+            moving_right = false;
+            image_xscale = -1;
+        }
+    } else {
+        x -= walk_speed;
+        image_xscale = -1;
+        
+        // Check for floor ahead
+        var has_floor_ahead = position_meeting(x - edge_check_dist, y + sprite_height + 2, obj_floor);
+        if (!has_floor_ahead || x <= patrol_point_left) {
+            moving_right = true;
+            image_xscale = 1;
+        }
     }
 }

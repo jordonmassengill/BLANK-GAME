@@ -37,8 +37,8 @@ function create_orchyde_properties() {
     var props = create_enemy_properties();
     
     // Override properties
-    props.max_health = 200;
-    props.current_health = 200;
+    props.max_health = 400;
+    props.current_health = 400;
     props.detection_range = 200;
     props.aggro_range = 150;
     props.stats.armor = 10;

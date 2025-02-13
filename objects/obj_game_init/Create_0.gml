@@ -1,5 +1,5 @@
 // obj_game_init Create Event
-window_set_size(1440, 810);
+window_set_size(1920, 1080);
 
 // Initialize systems
 instance_create_layer(0, 0, "instances", obj_pause_controller);

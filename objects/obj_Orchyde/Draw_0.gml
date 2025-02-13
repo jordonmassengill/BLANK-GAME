@@ -27,7 +27,7 @@ if (variable_instance_exists(id, "creature")) {
 }
 
 image_xscale = original_xscale;
-
+/*
 // Debug visuals
 if (global.debug_visible) {
     draw_set_color(c_yellow);

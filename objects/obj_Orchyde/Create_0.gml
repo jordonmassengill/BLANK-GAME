@@ -1,14 +1,24 @@
 // obj_Orchyde Create Event (parent = obj_enemy_parent)
 event_inherited();
 creature = create_orchyde_properties();
+
+// Movement and patrol properties
 patrol_point_left = x - 100;    
 patrol_point_right = x + 100;   
 is_patrolling = true;           
-moving_right = true;            
+moving_right = true;
+edge_check_dist = 32;
+walk_speed = 1;  // Added this
+
+// Combat properties
 melee_cooldown = 0;
-melee_cooldown_max = 60;  // 1 second cooldown
-melee_range = 60;  // Range to trigger melee attack
-melee_damage = 10;  // Base melee damage
+melee_cooldown_max = 60;
+melee_range = 56;
+melee_damage = 10;
+hit_timer = 0;
+hit_timer_max = 15;
+is_melee_attacking = false;
+is_shooting = false;
 
 // Add hit function
 hit = function() {
