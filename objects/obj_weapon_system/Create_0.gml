@@ -111,3 +111,14 @@ function shoot_shotgun(shooter, aim_angle) {
         requirements: ["has_shotgun", "can_shoot_shotgun"]
     });
 }
+
+function shoot_bomb(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_bomb,
+        aim_angle: aim_angle,
+        cooldown_var: "bomb_cooldown",
+        base_cooldown: 120,  // 2 second cooldown
+        requirements: ["has_bomb", "can_throw_bomb"]
+    });
+}

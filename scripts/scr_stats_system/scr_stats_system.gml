@@ -14,6 +14,8 @@ function create_stats() {
         proj_speed: 1.0,           // Base projectile speed multiplier
         life_steal: 0.0,           // Life steal percentage
         resistance: 1,             // Resistance to elemental effects (0-100%)
+        area_of_effect: 1.0,       // Base AoE damage multiplier
+        area_of_effect_radius: 32, // Base explosion radius in pixels
         
         // Crit properties
         crit_level: 1,              // Level 1 means no crits
@@ -33,6 +35,7 @@ function create_stats() {
         proj_speed_bonus: 0,
         armor_bonus: 0,
         resistance_bonus: 0,
+        area_of_effect_bonus: 0,
         
         // Getter methods
         get_max_health: function() {
@@ -77,6 +80,16 @@ function create_stats() {
         
         get_resistance: function() {
             return resistance + resistance_bonus;
+        },
+        
+        get_area_of_effect: function() {
+            return area_of_effect + area_of_effect_bonus;
+        },
+        
+        get_explosion_radius: function() {
+            // Start with base radius, add 8 pixels per level above 1
+            var aoe_level = floor(get_area_of_effect() / 0.5);
+            return area_of_effect_radius + ((aoe_level - 1) * 8);
         },
         
         // Crit methods

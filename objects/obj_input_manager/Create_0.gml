@@ -14,6 +14,7 @@ update_player_input = function(player_obj) {
         
         input.jump = gamepad_button_check(0, gp_face1);
         input.fire = gamepad_button_check(0, gp_shoulderrb);
+		input.alt_fire = gamepad_button_check(0, gp_shoulderlb);  // Left bumper for bombs
         
         input.aim_x = gamepad_axis_value(0, gp_axisrh);
         input.aim_y = gamepad_axis_value(0, gp_axisrv);
@@ -68,6 +69,7 @@ update_player_input = function(player_obj) {
         
         input.jump = keyboard_check(vk_space);
         input.fire = mouse_check_button(mb_left);
+		input.alt_fire = mouse_check_button(mb_right);  // Right click for bombs
         
         input.target_x = mouse_x;
         input.target_y = mouse_y;

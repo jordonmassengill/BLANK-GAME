@@ -9,6 +9,7 @@ function create_player_properties() {
     props.max_health = 150;
     props.current_health = 150;
     props.stats.crit_level = 2;
+	props.stats.area_of_effect = 2;
     props.inventory = create_inventory();
     
     // Add simple currency property

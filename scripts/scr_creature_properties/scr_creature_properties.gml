@@ -16,6 +16,10 @@ function create_creature_properties() {
         has_fireball : false,
         can_shoot_fireball : false,
         fireball_cooldown : 0,
+		// Add bomb properties
+		has_bomb : false,
+		can_throw_bomb : false,
+		bomb_cooldown : 0,
         
         // Input properties (useful for both AI and player control)
         input : {},
@@ -69,6 +73,7 @@ props.input.left = false;
 props.input.right = false;
 props.input.jump = false;
 props.input.fire = false;
+props.input.alt_fire = false;  // For bombs/secondary weapons
 props.input.aim_x = 0;
 props.input.aim_y = 0;
 props.input.target_x = 0;

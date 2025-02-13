@@ -121,6 +121,15 @@ if (stats_menu_active) {
                         show_debug_message("Upgraded Crit Level to: " + string(player.creature.stats.crit_level));
                     }
                     break;
+					case "Area of Effect":
+        var current_value = stats.get_area_of_effect();
+        if (current_value < 5.5) {  // Max level 10 (1.0 + 9 * 0.5)
+            stats.area_of_effect_bonus += 0.5;
+            points_spent++;
+            show_debug_message("Upgraded Area of Effect to: " + string(stats.get_area_of_effect()));
+            show_debug_message("New explosion radius: " + string(stats.get_explosion_radius()));
+        }
+        break;
             }
     
             if (points_spent > 0) {
