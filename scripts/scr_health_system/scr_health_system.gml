@@ -4,7 +4,16 @@ function create_health_system() {
         damage_creature: function(target, amount) {
             if (!variable_instance_exists(target, "creature")) return 0;
             
+            // Round the damage to 2 decimal places
+            amount = round(amount * 100) / 100;
+            
+            var old_health = target.creature.current_health;
             target.creature.current_health -= amount;
+            
+            // Round the new health to 2 decimal places
+            target.creature.current_health = round(target.creature.current_health * 100) / 100;
+            
+            var actual_damage = old_health - target.creature.current_health;
             
             // Call hit function if it exists
             if (variable_instance_exists(target, "hit")) {

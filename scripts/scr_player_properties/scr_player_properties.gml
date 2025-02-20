@@ -8,9 +8,12 @@ function create_player_properties() {
     props.input.using_controller = gamepad_is_connected(0);
     props.max_health = 150;
     props.current_health = 150;
-    props.stats.crit_level = 2;
-	props.stats.area_of_effect = 2;
+    props.crit_level = 1;
+    props.aoe_level = 3;          // Simple direct property for AOE level
     props.inventory = create_inventory();
+    
+    // Connect AOE level to stats system
+    props.stats.area_of_effect = props.aoe_level;
     
     // Add simple currency property
     props.currency = 0;

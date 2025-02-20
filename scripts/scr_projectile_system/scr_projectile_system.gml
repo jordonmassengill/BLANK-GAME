@@ -59,32 +59,26 @@ function create_base_projectile() {
         },
 
         on_hit: function(target) {
-            if (!variable_instance_exists(target, "creature")) return false;
-            if (self.shooter == target) return false;
+    if (!variable_instance_exists(target, "creature")) return false;
+    if (self.shooter == target) return false;
+    
+    var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
+    
+    var proj_shooter = self.shooter;
+    var proj_props = self.projectile_props;
 
-            var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
-            
-            // Apply crit multiplier if this is a crit shot
-            if (self.is_crit && self.shooter != noone && 
-                variable_instance_exists(self.shooter, "creature")) {
-                final_damage *= self.shooter.creature.stats.get_crit_multiplier();
-            }
-            
-            var damage_to_apply = final_damage;
-            var proj_shooter = self.shooter;
-            var proj_props = self.projectile_props;
+    // Debug the damage right before health modification
+    var actual_damage = global.health_system.damage_creature(target, final_damage);
 
-            var actual_damage = global.health_system.damage_creature(target, damage_to_apply);
+    if (proj_shooter != noone) {
+        global.health_system.apply_life_steal(proj_shooter, actual_damage);
+    }
 
-            if (proj_shooter != noone) {
-                global.health_system.apply_life_steal(proj_shooter, actual_damage);
-            }
+    if (proj_props != undefined) {
+        apply_status_effects(target, proj_props, proj_shooter);
+    }
+    return true;
 
-            if (proj_props != undefined) {
-                apply_status_effects(target, proj_props, proj_shooter);
-            }
-
-            return true;
         }
     };
 }

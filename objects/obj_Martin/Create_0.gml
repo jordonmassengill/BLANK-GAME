@@ -5,9 +5,9 @@ event_inherited();
 creature = create_creature_properties();
 
 // Set Martin's specific stats
-creature.max_health = 100;
-creature.current_health = 100;
-creature.stats.armor = 5;
+creature.max_health = 1000;
+creature.current_health = 1000;
+creature.stats.armor = 0;
 creature.stats.resistance = 5;
 
 // Movement and patrol properties

@@ -1,12 +1,12 @@
-// scr_stats_system
+// In scr_stats_system
 function create_stats() {
     return {
         // Base stats
         max_health: 100,
         current_health: 100,
         armor: 1,                  // Damage reduction percentage (0-100)
-        physical_damage: 1.0,      // Base physical damage multiplier
-        magical_damage: 1.0,       // Base magic damage multiplier
+        physical_damage: 1,        // Physical damage level (starts at 1)
+        magical_damage: 1,         // Magic damage level (starts at 1)
         elemental_power: 1.0,      // Base elemental effects multiplier
         move_speed: 3,             // Base movement speed
         health_regen: 0,           // Health gained per second
@@ -17,18 +17,12 @@ function create_stats() {
         area_of_effect: 1.0,       // Base AoE damage multiplier
         area_of_effect_radius: 32, // Base explosion radius in pixels
         
-        // Crit properties
-        crit_level: 1,              // Level 1 means no crits
-        crit_timer: 0,              // Current timer progress
-        crit_ready: false,          // Whether a crit is queued up
-        base_crit_cooldown: 600,    // Base cooldown (10 seconds at 60 fps)
-        
         // Modifiers/Bonuses
         max_health_bonus: 0,
         life_steal_bonus: 0,
         health_regen_bonus: 0,
-        physical_damage_bonus: 0,
-        magical_damage_bonus: 0,
+        physical_damage_bonus: 0,  // Added to level before bonus calculation
+        magical_damage_bonus: 0,   // Added to level before bonus calculation
         elemental_power_bonus: 0,
         speed_bonus: 0,
         rof_bonus: 0,
@@ -36,6 +30,12 @@ function create_stats() {
         armor_bonus: 0,
         resistance_bonus: 0,
         area_of_effect_bonus: 0,
+        
+        // Crit properties
+        crit_level: 1,              // Level 1 means no crits
+        crit_timer: 0,              // Current timer progress
+        crit_ready: false,          // Whether a crit is queued up
+        base_crit_cooldown: 600,    // Base cooldown (10 seconds at 60 fps)
         
         // Getter methods
         get_max_health: function() {
@@ -55,10 +55,12 @@ function create_stats() {
         },
         
         get_physical_damage: function() {
+            // Returns the current physical damage level
             return physical_damage + physical_damage_bonus;
         },
         
         get_magical_damage: function() {
+            // Returns the current magical damage level
             return magical_damage + magical_damage_bonus;
         },
         
@@ -83,20 +85,28 @@ function create_stats() {
         },
         
         get_area_of_effect: function() {
+            var creature_ref = variable_instance_get(other, "creature");
+            if (creature_ref != undefined && variable_struct_exists(creature_ref, "aoe_level")) {
+                return creature_ref.aoe_level;
+            }
+            // Fallback to old calculation if no aoe_level found
             return area_of_effect + area_of_effect_bonus;
         },
         
-        get_explosion_radius: function() {
-            // Start with base radius, add 8 pixels per level above 1
-            var aoe_level = floor(get_area_of_effect() / 0.5);
-            return area_of_effect_radius + ((aoe_level - 1) * 8);
+        get_area_of_effect_multiplier: function() {
+            // Calculates the actual multiplier for AOE damage
+            var level = get_area_of_effect();
+            return 1 + ((level - 1) * 0.2);  // Same formula as physical/magical damage
         },
         
-        // Crit methods
+        get_explosion_radius: function() {
+            // Each level adds 8 pixels to radius
+            var level = get_area_of_effect();
+            return area_of_effect_radius + ((level - 1) * 8);
+        },
+        
         get_current_crit_cooldown: function() {
-            // Cap crit level at 10
             var effective_level = min(crit_level, 10);
-            // Reduce cooldown by 60 frames (1 second) per level above 1
             if (effective_level > 1) {
                 return base_crit_cooldown - ((effective_level - 1) * 60);
             }
@@ -104,10 +114,7 @@ function create_stats() {
         },
         
         get_crit_multiplier: function() {
-            // No crit multiplier at level 1
             if (crit_level <= 1) return 1.0;
-            
-            // Start at 1.25x at level 2, add 0.25 for each level after
             return 1 + ((crit_level - 1) * 0.25);
         },
         
@@ -117,7 +124,7 @@ function create_stats() {
                 var current_cooldown = get_current_crit_cooldown();
                 if (crit_timer >= current_cooldown) {
                     crit_ready = true;
-                    crit_timer = current_cooldown;  // Cap at max
+                    crit_timer = current_cooldown;
                 }
             }
         },

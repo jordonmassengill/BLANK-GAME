@@ -115,25 +115,17 @@ if (stats_menu_active) {
 
                 // Finesse upgrade
                 case "Crit Level":
-                    if (player.creature.stats.crit_level < 10) {  // Ensure we don't exceed level 10
-                        player.creature.stats.crit_level += 1;
-                        points_spent++;
-                        show_debug_message("Upgraded Crit Level to: " + string(player.creature.stats.crit_level));
-                    }
+                    player.creature.stats.crit_level += 1;
+                    points_spent++;
                     break;
-					case "Area of Effect":
-        var current_value = stats.get_area_of_effect();
-        if (current_value < 5.5) {  // Max level 10 (1.0 + 9 * 0.5)
-            stats.area_of_effect_bonus += 0.5;
-            points_spent++;
-            show_debug_message("Upgraded Area of Effect to: " + string(stats.get_area_of_effect()));
-            show_debug_message("New explosion radius: " + string(stats.get_explosion_radius()));
-        }
-        break;
+                        
+                case "Area of Effect":
+                    player.creature.aoe_level += 1;
+                    points_spent++;
+                    break;
             }
     
             if (points_spent > 0) {
-                show_debug_message("Removing used orbs");
                 // Remove used orbs
                 var orbs_removed = 0;
                 var i = 0;
@@ -159,7 +151,6 @@ if (stats_menu_active) {
             stats_menu_active = false;
             points_spent = 0;
             instance_activate_all();
-            show_debug_message("Closing menu");
         }
     }
 }
