@@ -49,16 +49,12 @@ function calculate_damage(amount, damage_type, target, element_type, attacker) {
             case DAMAGE_TYPE.PHYSICAL:
                 damage_level = attacker.creature.stats.get_physical_damage();
                 damage_bonus = 1 + ((damage_level - 1) * 0.2);
-                show_debug_message("Physical damage level: " + string(damage_level));
-                show_debug_message("Physical damage bonus (1 + (level-1) * 0.2): " + string(damage_bonus));
                 
                 // First apply crit
                 final_damage = amount * crit_mult;
-                show_debug_message("After crit (base * crit): " + string(final_damage));
                 
                 // Then multiply by physical bonus
                 final_damage *= damage_bonus;
-                show_debug_message("After physical bonus (* " + string(damage_bonus) + "): " + string(final_damage));
                 
                 armor_reduction = (1 - (armor / 100));
                 break;
@@ -66,16 +62,12 @@ function calculate_damage(amount, damage_type, target, element_type, attacker) {
             case DAMAGE_TYPE.MAGICAL:
                 damage_level = attacker.creature.stats.get_magical_damage();
                 damage_bonus = 1 + ((damage_level - 1) * 0.2);
-                show_debug_message("Magic damage level: " + string(damage_level));
-                show_debug_message("Magic damage bonus (1 + (level-1) * 0.2): " + string(damage_bonus));
                 
                 // First apply crit
                 final_damage = amount * crit_mult;
-                show_debug_message("After crit (base * crit): " + string(final_damage));
                 
                 // Then multiply by magical bonus
                 final_damage *= damage_bonus;
-                show_debug_message("After magical bonus (* " + string(damage_bonus) + "): " + string(final_damage));
                 
                 armor_reduction = (1 - (armor / 100));
                 break;
@@ -85,19 +77,24 @@ function calculate_damage(amount, damage_type, target, element_type, attacker) {
                 break;
                 
             case DAMAGE_TYPE.AOE:
+			    damage_level = attacker.creature.stats.get_aoe_damage();
+                damage_bonus = 1 + ((damage_level - 1) * 0.5);
+                
+                // First apply crit
+                final_damage = amount * crit_mult;
+                
+                // Then multiply by physical bonus
+                final_damage *= damage_bonus;
                 armor_reduction = (1 - (armor / 50));
                 break;
         }
         
         // Apply armor reduction
-        show_debug_message("Armor reduction multiplier: " + string(armor_reduction));
         final_damage *= armor_reduction;
         
         // Round to 2 decimal places
         final_damage = round(final_damage * 100) / 100;
-        show_debug_message("Final damage after rounding: " + string(final_damage));
     }
     
-    show_debug_message("=== DAMAGE CALCULATION END ===");
     return final_damage;
 }

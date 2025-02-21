@@ -14,8 +14,8 @@ function create_stats() {
         proj_speed: 1.0,           // Base projectile speed multiplier
         life_steal: 0.0,           // Life steal percentage
         resistance: 1,             // Resistance to elemental effects (0-100%)
-        area_of_effect: 1.0,       // Base AoE damage multiplier
-        area_of_effect_radius: 32, // Base explosion radius in pixels
+        aoe_damage: 1.0,		   // Base AoE damage multiplier
+        aoe_radius: 32,			   // Base explosion radius in pixels
         
         // Modifiers/Bonuses
         max_health_bonus: 0,
@@ -29,7 +29,7 @@ function create_stats() {
         proj_speed_bonus: 0,
         armor_bonus: 0,
         resistance_bonus: 0,
-        area_of_effect_bonus: 0,
+        aoe_damage_bonus: 0,
         
         // Crit properties
         crit_level: 1,              // Level 1 means no crits
@@ -84,25 +84,14 @@ function create_stats() {
             return resistance + resistance_bonus;
         },
         
-        get_area_of_effect: function() {
-            var creature_ref = variable_instance_get(other, "creature");
-            if (creature_ref != undefined && variable_struct_exists(creature_ref, "aoe_level")) {
-                return creature_ref.aoe_level;
-            }
-            // Fallback to old calculation if no aoe_level found
-            return area_of_effect + area_of_effect_bonus;
-        },
-        
-        get_area_of_effect_multiplier: function() {
-            // Calculates the actual multiplier for AOE damage
-            var level = get_area_of_effect();
-            return 1 + ((level - 1) * 0.2);  // Same formula as physical/magical damage
+        get_aoe_damage: function() {
+            return aoe_damage + aoe_damage_bonus;
         },
         
         get_explosion_radius: function() {
             // Each level adds 8 pixels to radius
-            var level = get_area_of_effect();
-            return area_of_effect_radius + ((level - 1) * 8);
+            var level = get_aoe_damage();
+            return aoe_radius + ((level - 1) * 8);
         },
         
         get_current_crit_cooldown: function() {

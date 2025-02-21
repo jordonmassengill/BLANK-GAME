@@ -36,5 +36,5 @@ stats_list = [
     {name: "Armor", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"},
     {name: "Resistance", base: 1, per_level: 1, level: 1, upgradeable_by: "defense"},
     {name: "Crit Level", base: 1, per_level: 1, level: 1, upgradeable_by: "finesse"},
-	{name: "Area of Effect", base: 1.0, per_level: 0.5, level: 1, upgradeable_by: "finesse"}
+	{name: "Area of Effect", base: 1.0, per_level: 1, level: 1, upgradeable_by: "finesse"}
 ];

@@ -74,64 +74,80 @@ for (var i = 0; i < array_length(stats_list); i++) {
     var current_level = 1;
     
     // Get current values
-    switch(stat.name) {
-        case "Max Health":  
-            current_value = player.creature.max_health;
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Life Steal": 
-            current_value = stats.get_life_steal() * 100;
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Regeneration": 
-            current_value = stats.get_health_regen();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Physical Damage": 
-            current_value = stats.get_physical_damage();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Magical Damage": 
-            current_value = stats.get_magical_damage();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Elemental Power": 
-            current_value = stats.get_elemental_power();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Move Speed": 
-            current_value = stats.get_move_speed();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Rate of Fire": 
-            current_value = stats.get_rate_of_fire();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Projectile Speed": 
-            current_value = stats.get_proj_speed();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Armor": 
-            current_value = stats.get_armor();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
-        case "Resistance": 
-            current_value = stats.get_resistance();
-            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-            break;
+	var value_text = "Unknown";  // Declare at function scope before switch
+switch(stat.name) {
+    case "Max Health":  
+        current_value = player.creature.max_health;
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Life Steal": 
+        current_value = stats.get_life_steal() * 100;
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Regeneration": 
+        current_value = stats.get_health_regen();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Physical Damage": 
+        current_value = stats.get_physical_damage();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Magical Damage": 
+        current_value = stats.get_magical_damage();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Elemental Power": 
+        current_value = stats.get_elemental_power();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Move Speed": 
+        current_value = stats.get_move_speed();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Rate of Fire": 
+        current_value = stats.get_rate_of_fire();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Projectile Speed": 
+        current_value = stats.get_proj_speed();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Armor": 
+        current_value = stats.get_armor();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
+    case "Resistance": 
+        current_value = stats.get_resistance();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+        
     case "Crit Level":
-    current_value = stats.crit_level;
-    current_level = current_value;
-    var value_text = "N/A";  // Initialize with a default value
-    if (current_level > 1) {
-        var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds
-        var multiplier = 1 + ((current_level - 1) * 0.25);
-        value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
-    } else {
-        value_text = "Inactive";
-    }
-    break;
-    }
+        current_value = stats.crit_level;
+        current_level = current_value;
+        if (current_level > 1) {
+            var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;
+            var multiplier = 1 + ((current_level - 1) * 0.25);
+            value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
+        } else {
+            value_text = "Inactive";
+        }
+        break;
+        
+    case "Area of Effect":
+        current_value = stats.get_aoe_damage();
+        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+        break;
+}
 
     // In upgrade mode, check for available upgrades
     if (upgrade_mode) {
