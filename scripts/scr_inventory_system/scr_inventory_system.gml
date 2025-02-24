@@ -8,11 +8,14 @@ function create_inventory(_slots = 16) {  // Changed default to 16
             var len = array_length(items);
             for(var i = 0; i < len; i++) {
                 if (items[i] != undefined && items[i].type == item.type) {
-                    if (!variable_struct_exists(items[i], "count")) {
-                        items[i].count = 1;
+                    // First check if the item exists before checking struct properties
+                    if (items[i] != undefined) {
+                        if (!variable_struct_exists(items[i], "count")) {
+                            items[i].count = 1;
+                        }
+                        items[i].count++;
+                        return true;
                     }
-                    items[i].count++;
-                    return true;
                 }
             }
             
@@ -30,7 +33,9 @@ function create_inventory(_slots = 16) {  // Changed default to 16
         remove_item: function(slot) {
             var len = array_length(items);
             if (slot >= 0 && slot < len) {
+                // First check if the item exists
                 if (items[slot] != undefined) {
+                    // Then check its properties
                     if (variable_struct_exists(items[slot], "count") && items[slot].count > 1) {
                         items[slot].count--;
                         return items[slot];

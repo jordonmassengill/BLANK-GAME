@@ -239,7 +239,6 @@ if (i == selected_stat) {
     draw_text_transformed(start_x, y_pos, stat.name + " (Level " + string(current_level) + ")", 1.5, 1.5, 0);
     
     // Draw current value
-    var value_text = "Unknown";  // Initialize with default value
 if (stat.name == "Crit Level") {
     if (current_level > 1) {
         var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds

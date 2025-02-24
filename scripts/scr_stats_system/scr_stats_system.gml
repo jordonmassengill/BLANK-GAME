@@ -7,15 +7,15 @@ function create_stats() {
         armor: 1,                  // Damage reduction percentage (0-100)
         physical_damage: 1,        // Physical damage level (starts at 1)
         magical_damage: 1,         // Magic damage level (starts at 1)
-        elemental_power: 1.0,      // Base elemental effects multiplier
+        elemental_power: 1,      // Base elemental effects multiplier
         move_speed: 3,             // Base movement speed
         health_regen: 0,           // Health gained per second
-        rate_of_fire: 1.0,         // Base rate of fire multiplier
-        proj_speed: 1.0,           // Base projectile speed multiplier
+        rate_of_fire: 1,         // Base rate of fire multiplier
+        proj_speed: 1,           // Base projectile speed multiplier
         life_steal: 0.0,           // Life steal percentage
         resistance: 1,             // Resistance to elemental effects (0-100%)
-        aoe_damage: 1.0,		   // Base AoE damage multiplier
-        aoe_radius: 32,			   // Base explosion radius in pixels
+        aoe_damage: 1,		   // Base AoE damage multiplier
+        aoe_radius: 1,			   // Base explosion radius in pixels
         
         // Modifiers/Bonuses
         max_health_bonus: 0,
@@ -30,7 +30,8 @@ function create_stats() {
         armor_bonus: 0,
         resistance_bonus: 0,
         aoe_damage_bonus: 0,
-        
+        aoe_radius_bonus: 0,
+		
         // Crit properties
         crit_level: 1,              // Level 1 means no crits
         crit_timer: 0,              // Current timer progress
@@ -55,12 +56,10 @@ function create_stats() {
         },
         
         get_physical_damage: function() {
-            // Returns the current physical damage level
             return physical_damage + physical_damage_bonus;
         },
         
         get_magical_damage: function() {
-            // Returns the current magical damage level
             return magical_damage + magical_damage_bonus;
         },
         
@@ -88,10 +87,8 @@ function create_stats() {
             return aoe_damage + aoe_damage_bonus;
         },
         
-        get_explosion_radius: function() {
-            // Each level adds 8 pixels to radius
-            var level = get_aoe_damage();
-            return aoe_radius + ((level - 1) * 8);
+        get_aoe_radius: function() {
+            return aoe_radius + aoe_radius_bonus;
         },
         
         get_current_crit_cooldown: function() {

@@ -12,22 +12,22 @@ function create_floating_number() {
         is_paused: true,    // Start paused
         
         initialize: function(val, xx, yy, is_heal) {
-            value = val;
-            x = xx;
-            y = yy;
-            base_y = yy;    // Store original y
-            y_offset = 0;
-            alpha = 1;
-            is_healing = is_heal;
-            pause_timer = 90;
-            is_paused = true;
+            self.value = val;
+            self.x = xx;
+            self.y = yy;
+            self.base_y = yy;    // Store original y
+            self.y_offset = 0;
+            self.alpha = 1;
+            self.is_healing = is_heal;
+            self.pause_timer = 90;
+            self.is_paused = true;
         },
         
         reset_animation: function() {
-            y_offset = 0;
-            alpha = 1;
-            pause_timer = 90;
-            is_paused = true;
+            self.y_offset = 0;
+            self.alpha = 1;
+            self.pause_timer = 90;
+            self.is_paused = true;
         }
     };
 }

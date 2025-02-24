@@ -121,6 +121,7 @@ if (stats_menu_active) {
                         
                 case "Area of Effect":
                     player.creature.stats.aoe_damage += 1;
+					player.creature.stats.aoe_radius += 0.25;
                     points_spent++;
                     break;
             }
