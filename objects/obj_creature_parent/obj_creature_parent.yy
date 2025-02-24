@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"obj_creature_parents",
-    "path":"folders/Objects/obj_creatures/obj_creature_parents.yy",
+    "path":"folders/Objects Parents/obj_creature_parents.yy",
   },
   "parentObjectId":null,
   "persistent":false,

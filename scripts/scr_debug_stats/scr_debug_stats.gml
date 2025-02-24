@@ -94,6 +94,31 @@ function draw_debug_stats(instance) {
         draw_text(xx, yy, "Has Fireball: " + string(creature.has_fireball));
         yy += line_height;
     }
+	
+	    if (variable_instance_exists(creature, "has_dart")) {
+        draw_text(xx, yy, "Has Dart: " + string(creature.has_dart));
+        yy += line_height;
+    }
+	
+		    if (variable_instance_exists(creature, "has_waterball")) {
+        draw_text(xx, yy, "Has Waterball: " + string(creature.has_waterball));
+        yy += line_height;
+    }
+	
+		if (variable_instance_exists(creature, "has_iceball")) {
+        draw_text(xx, yy, "Has Iceball: " + string(creature.has_iceball));
+        yy += line_height;
+    }
+	
+		if (variable_instance_exists(creature, "has_electro")) {
+        draw_text(xx, yy, "Has Electro: " + string(creature.has_electro));
+        yy += line_height;
+    }
+	
+		if (variable_instance_exists(creature, "has_ghoststrike")) {
+        draw_text(xx, yy, "Has Ghoststrike: " + string(creature.has_ghoststrike));
+        yy += line_height;
+    }
     
     if (variable_instance_exists(creature, "has_jetpack")) {
         draw_text(xx, yy, "Jetpack Fuel: " + string(creature.jetpack_fuel));

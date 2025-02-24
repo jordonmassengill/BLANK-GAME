@@ -10,7 +10,7 @@ with(all) {
     
     // Handle all cooldowns
     var cooldowns = [];
-    array_push(cooldowns, "fireball_cooldown", "ghostball_cooldown", "shotgun_cooldown", "bomb_cooldown");
+    array_push(cooldowns, "fireball_cooldown", "ghostball_cooldown", "shotgun_cooldown", "bomb_cooldown", "dart_cooldown", "waterball_cooldown", "iceball_cooldown", "electro_cooldown", "ghoststrike_cooldown");
     
     for(i = 0; i < array_length(cooldowns); i++) {
         cd = cooldowns[i];
@@ -38,6 +38,37 @@ with(all) {
             shoot_fireball(other, aim_angle);
         }
     }
+	
+	    if (creature.input.fire) {
+        with(other) {
+            shoot_dart(other, aim_angle);
+        }
+    }
+	
+		if (creature.input.fire) {
+        with(other) {
+            shoot_waterball(other, aim_angle);
+        }
+    }
+			
+		if (creature.input.fire) {
+        with(other) {
+            shoot_iceball(other, aim_angle);
+        }
+    }
+	
+		if (creature.input.fire) {
+        with(other) {
+            shoot_electro(other, aim_angle);
+        }
+    }
+	
+		if (creature.input.fire) {
+        with(other) {
+            shoot_ghoststrike(other, aim_angle);
+        }
+    }
+	
     
     // Check for bomb throwing
     if (creature.input.alt_fire) {

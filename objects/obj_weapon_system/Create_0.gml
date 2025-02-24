@@ -86,6 +86,61 @@ function shoot_fireball(shooter, aim_angle) {
     });
 }
 
+function shoot_dart(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_dart,
+        aim_angle: aim_angle,
+        cooldown_var: "dart_cooldown",
+        base_cooldown: 100,
+        requirements: ["has_dart", "can_shoot_dart"]
+    });
+}
+
+function shoot_waterball(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_waterball,
+        aim_angle: aim_angle,
+        cooldown_var: "waterball_cooldown",
+        base_cooldown: 100,
+        requirements: ["has_waterball", "can_shoot_waterball"]
+    });
+}
+
+function shoot_iceball(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_iceball,
+        aim_angle: aim_angle,
+        cooldown_var: "iceball_cooldown",
+        base_cooldown: 100,
+        requirements: ["has_iceball", "can_shoot_iceball"]
+    });
+}
+
+function shoot_electro(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_electro,
+        aim_angle: aim_angle,
+        cooldown_var: "electro_cooldown",
+        base_cooldown: 20,
+        requirements: ["has_electro", "can_shoot_electro"]
+    });
+}
+
+function shoot_ghoststrike(shooter, aim_angle) {
+    return shoot_projectile({
+        shooter: shooter,
+        projectile_obj: obj_ghoststrike,
+        aim_angle: aim_angle,
+        cooldown_var: "ghoststrike_cooldown",
+        base_cooldown: 10,
+        requirements: ["has_ghoststrike", "can_shoot_ghoststrike"]
+    });
+}
+
 function shoot_ghostball(shooter, aim_angle) {
     return shoot_projectile({
         shooter: shooter,

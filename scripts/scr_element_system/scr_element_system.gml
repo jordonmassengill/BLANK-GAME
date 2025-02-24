@@ -24,7 +24,7 @@ function get_element_data(element_type) {
         case ELEMENT_TYPE.POISON:
             return {
                 dot_enabled: true,
-                dot_damage_mult: 0.1,
+                dot_damage_mult: 0.6,
                 dot_duration: 600,
                 dot_tick_rate: 60
             };

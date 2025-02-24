@@ -20,6 +20,26 @@ function create_creature_properties() {
 		has_bomb : false,
 		can_throw_bomb : false,
 		bomb_cooldown : 0,
+		//Dart Properties
+		has_dart : false,
+		can_shoot_dart : false,
+		dart_cooldown : 0,
+		//Waterball Properties
+		has_waterball : false,
+		can_shoot_waterball : false,
+		waterball_cooldown : 0,
+		//Iceball Properties
+		has_iceball : false,
+		can_shoot_iceball : false,
+		iceball_cooldown : 0,
+		//Electro Properties
+		has_electro : false,
+		can_shoot_electro : false,
+		electro_cooldown : 0,
+		//Ghoststrike Properties
+		has_ghoststrike : false,
+		can_shoot_ghoststrike: false,
+		ghoststrike_cooldown : 0,
         
         // Input properties (useful for both AI and player control)
         input : {},

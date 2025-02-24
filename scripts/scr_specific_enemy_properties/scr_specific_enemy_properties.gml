@@ -28,7 +28,7 @@ function create_dummy_properties() {
     props.aggro_range = 100;        // Zombies have smaller aggro range
 	props.stats.health_regen = 20;
 	props.stats.armor = 10;
-	props.stats.resistance = 10;
+	props.stats.resistance = 4;
     
     return props;
 }
@@ -42,7 +42,7 @@ function create_orchyde_properties() {
     props.detection_range = 200;
     props.aggro_range = 150;
     props.stats.armor = 10;
-    props.stats.resistance = 10;
+    props.stats.resistance = 4;
 	props.stats.move_speed = 2;
 	props.currency_value = 181;
     
