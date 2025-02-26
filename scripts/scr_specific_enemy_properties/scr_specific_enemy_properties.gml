@@ -43,7 +43,7 @@ function create_orchyde_properties() {
     props.aggro_range = 150;
     props.stats.armor = 10;
     props.stats.resistance = 4;
-	props.stats.move_speed = 2;
+	props.stats.move_speed = 3;
 	props.currency_value = 181;
     
     // Shotgun properties

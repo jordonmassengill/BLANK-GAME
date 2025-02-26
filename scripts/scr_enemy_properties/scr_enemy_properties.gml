@@ -43,59 +43,59 @@ function create_enemy_properties() {
 }
 
 // Helper function to set up enemy-specific states
-function setup_enemy_states(enemy) {
+function setup_enemy_states(props) {
     // PATROL state
-    enemy.state_machine.add_state("PATROL", 
-        function() {
+    props.state_machine.add_state("PATROL", 
+        method(props, function() {
             // On enter patrol
-            enemy.is_patrolling = true;
-        },
-        function() {
+            is_patrolling = true;
+        }),
+        method(props, function() {
             // Update patrol behavior
             
             // Simple left-right movement with edge detection
-            if (enemy.moving_right) {
-                enemy.xsp = enemy.stats.get_move_speed() * 0.5; // Half speed for patrol
-                enemy.facing_direction = "right";
+            if (moving_right) {
+                xsp = stats.get_move_speed() * 0.5; // Half speed for patrol
+                facing_direction = "right";
                 
                 // Check for edge or patrol point boundary
                 var has_floor_ahead = position_meeting(
-                    enemy.owner.x + enemy.edge_check_dist, 
-                    enemy.owner.y + enemy.owner.sprite_height + 2, 
+                    owner.x + edge_check_dist, 
+                    owner.y + owner.sprite_height + 2, 
                     obj_floor
                 );
                 
-                if (!has_floor_ahead || enemy.owner.x >= enemy.patrol_point_right) {
-                    enemy.moving_right = false;
-                    enemy.facing_direction = "left";
+                if (!has_floor_ahead || owner.x >= patrol_point_right) {
+                    moving_right = false;
+                    facing_direction = "left";
                 }
             } else {
-                enemy.xsp = -enemy.stats.get_move_speed() * 0.5; // Half speed for patrol
-                enemy.facing_direction = "left";
+                xsp = -stats.get_move_speed() * 0.5; // Half speed for patrol
+                facing_direction = "left";
                 
                 // Check for edge or patrol point boundary
                 var has_floor_ahead = position_meeting(
-                    enemy.owner.x - enemy.edge_check_dist, 
-                    enemy.owner.y + enemy.owner.sprite_height + 2, 
+                    owner.x - edge_check_dist, 
+                    owner.y + owner.sprite_height + 2, 
                     obj_floor
                 );
                 
-                if (!has_floor_ahead || enemy.owner.x <= enemy.patrol_point_left) {
-                    enemy.moving_right = true;
-                    enemy.facing_direction = "right";
+                if (!has_floor_ahead || owner.x <= patrol_point_left) {
+                    moving_right = true;
+                    facing_direction = "right";
                 }
             }
             
             // Check for player/NPC in detection range
-            var player = instance_nearest(enemy.owner.x, enemy.owner.y, obj_player_creature_parent);
-            var npc = instance_nearest(enemy.owner.x, enemy.owner.y, obj_npc_parent);
+            var player = instance_nearest(owner.x, owner.y, obj_player_creature_parent);
+            var npc = instance_nearest(owner.x, owner.y, obj_npc_parent);
             
             var detected_target = noone;
-            var closest_dist = enemy.detection_range;
+            var closest_dist = detection_range;
             
             // Check player distance
             if (player != noone) {
-                var player_dist = point_distance(enemy.owner.x, enemy.owner.y, player.x, player.y);
+                var player_dist = point_distance(owner.x, owner.y, player.x, player.y);
                 if (player_dist < closest_dist) {
                     closest_dist = player_dist;
                     detected_target = player;
@@ -104,7 +104,7 @@ function setup_enemy_states(enemy) {
             
             // Check NPC distance
             if (npc != noone) {
-                var npc_dist = point_distance(enemy.owner.x, enemy.owner.y, npc.x, npc.y);
+                var npc_dist = point_distance(owner.x, owner.y, npc.x, npc.y);
                 if (npc_dist < closest_dist) {
                     closest_dist = npc_dist;
                     detected_target = npc;
@@ -113,189 +113,189 @@ function setup_enemy_states(enemy) {
             
             // If target detected, transition to chase
             if (detected_target != noone) {
-                enemy.closest_target = detected_target;
-                enemy.closest_distance = closest_dist;
-                enemy.state_machine.change_state("CHASE");
+                closest_target = detected_target;
+                closest_distance = closest_dist;
+                state_machine.change_state("CHASE");
             }
-        }
+        })
     );
     
     // CHASE state
-    enemy.state_machine.add_state("CHASE", 
-        function() {
+    props.state_machine.add_state("CHASE", 
+        method(props, function() {
             // On enter chase
-            enemy.is_patrolling = false;
-        },
-        function() {
+            is_patrolling = false;
+        }),
+        method(props, function() {
             // Update chase behavior
-            if (enemy.closest_target == noone) {
+            if (closest_target == noone) {
                 // Return to patrol if no target
-                enemy.state_machine.change_state("PATROL");
+                state_machine.change_state("PATROL");
                 return;
             }
             
             // Update distance to target
-            enemy.closest_distance = point_distance(
-                enemy.owner.x, enemy.owner.y, 
-                enemy.closest_target.x, enemy.closest_target.y
+            closest_distance = point_distance(
+                owner.x, owner.y, 
+                closest_target.x, closest_target.y
             );
             
             // Check if target is still in range
-            if (enemy.closest_distance > enemy.detection_range) {
-                enemy.closest_target = noone;
-                enemy.state_machine.change_state("PATROL");
+            if (closest_distance > detection_range) {
+                closest_target = noone;
+                state_machine.change_state("PATROL");
                 return;
             }
             
             // Update facing direction
-            enemy.facing_direction = (enemy.closest_target.x > enemy.owner.x) ? "right" : "left";
+            facing_direction = (closest_target.x > owner.x) ? "right" : "left";
             
             // Check for melee attack range
-            if (enemy.closest_distance < enemy.owner.sprite_width + 10) {
-                enemy.state_machine.change_state("MELEE_ATTACK");
+            if (closest_distance < owner.sprite_width + 10) {
+                state_machine.change_state("MELEE_ATTACK");
                 return;
             }
             
             // Check for ranged attack if enemy can shoot
-            if (variable_struct_exists(enemy, "can_shoot_ghostball") && 
-                enemy.can_shoot_ghostball && 
-                enemy.ghostball_cooldown <= 0 &&
-                enemy.closest_distance < enemy.detection_range * 0.8) {
-                enemy.state_machine.change_state("RANGED_ATTACK");
+            if (variable_struct_exists(self, "can_shoot_ghostball") && 
+                can_shoot_ghostball && 
+                ghostball_cooldown <= 0 &&
+                closest_distance < detection_range * 0.8) {
+                state_machine.change_state("RANGED_ATTACK");
                 return;
             }
             
             // Move toward target
-            var move_dir = (enemy.closest_target.x > enemy.owner.x) ? 1 : -1;
+            var move_dir = (closest_target.x > owner.x) ? 1 : -1;
             
             // Check for floor ahead before moving
-            var check_x = enemy.owner.x + (move_dir * enemy.edge_check_dist);
+            var check_x = owner.x + (move_dir * edge_check_dist);
             var has_floor_ahead = position_meeting(
                 check_x, 
-                enemy.owner.y + enemy.owner.sprite_height + 2, 
+                owner.y + owner.sprite_height + 2, 
                 obj_floor
             );
             
             if (has_floor_ahead) {
-                enemy.xsp = move_dir * enemy.stats.get_move_speed();
+                xsp = move_dir * stats.get_move_speed();
             } else {
                 // Stop at ledge
-                enemy.xsp = 0;
+                xsp = 0;
             }
-        }
+        })
     );
     
     // MELEE_ATTACK state
-    enemy.state_machine.add_state("MELEE_ATTACK", 
-        function() {
+    props.state_machine.add_state("MELEE_ATTACK", 
+        method(props, function() {
             // On enter melee attack
-            enemy.is_melee_attacking = true;
-            enemy.xsp = 0; // Stop movement during attack
-            enemy.melee_cooldown = enemy.melee_cooldown_max;
+            is_melee_attacking = true;
+            xsp = 0; // Stop movement during attack
+            melee_cooldown = melee_cooldown_max;
             
             // Create melee hitbox if this enemy has one
-            if (variable_struct_exists(enemy, "melee_hitbox_obj")) {
-                var hitbox_offset = (enemy.facing_direction == "right") ? 20 : -20;
+            if (variable_struct_exists(self, "melee_hitbox_obj")) {
+                var hitbox_offset = (facing_direction == "right") ? 20 : -20;
                 var hitbox = instance_create_layer(
-                    enemy.owner.x + hitbox_offset,
-                    enemy.owner.y - 16,
+                    owner.x + hitbox_offset,
+                    owner.y - 16,
                     "Instances",
-                    enemy.melee_hitbox_obj
+                    melee_hitbox_obj
                 );
                 
                 if (hitbox != noone) {
-                    hitbox.creator = enemy.owner;
-                    hitbox.damage = enemy.melee_damage;
+                    hitbox.creator = owner;
+                    hitbox.damage = melee_damage;
                     hitbox.life_time = 15;
                 }
             }
-        },
-        function() {
+        }),
+        method(props, function() {
             // Update melee attack
             // Most implementation happens in animation events
             // Just need to check when to end the state
             
-            enemy.melee_cooldown--;
+            melee_cooldown--;
             
             // Transition back to chase after cooldown period
-            if (enemy.melee_cooldown <= 0) {
-                enemy.is_melee_attacking = false;
-                enemy.state_machine.change_state("CHASE");
+            if (melee_cooldown <= 0) {
+                is_melee_attacking = false;
+                state_machine.change_state("CHASE");
             }
-        }
+        })
     );
     
     // RANGED_ATTACK state
-    enemy.state_machine.add_state("RANGED_ATTACK", 
-        function() {
+    props.state_machine.add_state("RANGED_ATTACK", 
+        method(props, function() {
             // On enter ranged attack
-            enemy.is_shooting = true;
-            enemy.xsp = 0; // Stop movement during attack
+            is_shooting = true;
+            xsp = 0; // Stop movement during attack
             
             // Shoot in direction of target
-            if (enemy.closest_target != noone) {
+            if (closest_target != noone) {
                 var dir = point_direction(
-                    enemy.owner.x, enemy.owner.y,
-                    enemy.closest_target.x, enemy.closest_target.y
+                    owner.x, owner.y,
+                    closest_target.x, closest_target.y
                 );
                 
                 // Use the weapon system to fire
                 with(obj_weapon_system) {
-                    if (variable_struct_exists(other.enemy, "can_shoot_ghostball") && other.enemy.can_shoot_ghostball) {
+                    if (variable_struct_exists(other, "can_shoot_ghostball") && other.can_shoot_ghostball) {
                         shoot_ghostball(other.owner, dir);
-                    } else if (variable_struct_exists(other.enemy, "has_shotgun") && other.enemy.has_shotgun) {
+                    } else if (variable_struct_exists(other, "has_shotgun") && other.has_shotgun) {
                         shoot_shotgun(other.owner, dir);
                     }
                 }
             }
-        },
-        function() {
+        }),
+        method(props, function() {
             // Just wait to transition back - animation controlled
-            enemy.state_machine.change_state("CHASE");
-        }
+            state_machine.change_state("CHASE");
+        })
     );
     
     // HIT state - when enemy gets hit
-    enemy.state_machine.add_state("HIT", 
-        function() {
+    props.state_machine.add_state("HIT", 
+        method(props, function() {
             // On enter hit state
-            enemy.xsp = 0;
-            enemy.hit_timer = enemy.hit_timer_max;
-        },
-        function() {
+            xsp = 0;
+            hit_timer = hit_timer_max;
+        }),
+        method(props, function() {
             // Decrement timer and transition back when done
-            enemy.hit_timer--;
+            hit_timer--;
             
-            if (enemy.hit_timer <= 0) {
+            if (hit_timer <= 0) {
                 // Go back to chase if player still in range
-                if (enemy.closest_target != noone && 
-                    enemy.closest_distance <= enemy.detection_range) {
-                    enemy.state_machine.change_state("CHASE");
+                if (closest_target != noone && 
+                    closest_distance <= detection_range) {
+                    state_machine.change_state("CHASE");
                 } else {
-                    enemy.state_machine.change_state("PATROL");
+                    state_machine.change_state("PATROL");
                 }
             }
-        }
+        })
     );
     
     // DEAD state
-    enemy.state_machine.add_state("DEAD", 
-        function() {
+    props.state_machine.add_state("DEAD", 
+        method(props, function() {
             // On enter dead state
-            enemy.xsp = 0;
-            enemy.ysp = 0;
+            xsp = 0;
+            ysp = 0;
             
             // Give currency to player
             var player = instance_find(obj_player_creature_parent, 0);
             if (player != noone) {
-                player.creature.currency += enemy.currency_value;
+                player.creature.currency += currency_value;
             }
             
             // Create death effect
             // (This would be done by specific enemy types)
-        },
-        function() {
+        }),
+        method(props, function() {
             // Just wait to be destroyed - animation controlled
-        }
+        })
     );
 }

@@ -22,6 +22,8 @@
     {"name":"inst_3EB5CDFC","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_17157928","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_62867F03","path":"rooms/Room1/Room1.yy",},
+    {"name":"inst_188A02B5","path":"rooms/Room1/Room1.yy",},
+    {"name":"inst_121AA0E","path":"rooms/Room1/Room1.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -37,6 +39,8 @@
         {"$GMRInstance":"v1","%Name":"inst_3EB5CDFC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3EB5CDFC","objectId":{"name":"obj_upgrade","path":"objects/obj_upgrade/obj_upgrade.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2048.0,"y":2288.0,},
         {"$GMRInstance":"v1","%Name":"inst_17157928","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_17157928","objectId":{"name":"obj_jpack","path":"objects/obj_jpack/obj_jpack.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2272.0,"y":2291.0,},
         {"$GMRInstance":"v1","%Name":"inst_62867F03","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_62867F03","objectId":{"name":"obj_dartp","path":"objects/obj_dartp/obj_dartp.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2304.0,"y":2290.0,},
+        {"$GMRInstance":"v1","%Name":"inst_188A02B5","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_188A02B5","objectId":{"name":"obj_Martin","path":"objects/obj_Martin/obj_Martin.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2495.0,"y":2296.0,},
+        {"$GMRInstance":"v1","%Name":"inst_121AA0E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_121AA0E","objectId":{"name":"obj_Orchyde","path":"objects/obj_Orchyde/obj_Orchyde.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":3749.0,"y":2280.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRAssetLayer":"","%Name":"Foreground","assets":[
         {"$GMRSpriteGraphic":"","%Name":"graphic_69E45C74","animationSpeed":1.0,"colour":4294967295,"frozen":false,"headPosition":0.0,"ignore":false,"inheritedItemId":null,"inheritItemSettings":false,"name":"graphic_69E45C74","resourceType":"GMRSpriteGraphic","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"spriteId":{"name":"Sprite67","path":"sprites/Sprite67/Sprite67.yy",},"x":3390.0,"y":2024.0,},
