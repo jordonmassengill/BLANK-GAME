@@ -1,7 +1,10 @@
 // obj_guy Step Event
 event_inherited();
 
-// This should be in obj_guy's Step Event
+// Update state machine
+creature.state_machine.update();
+
+// Check for death
 if (creature.current_health <= 0) {
     // Create death effect
     var death_effect = instance_create_layer(x, y, "Instances", obj_HeroDeath);
@@ -19,29 +22,75 @@ if (creature.current_health <= 0) {
 // Handle hit timer
 if (hit_timer > 0) hit_timer--;
 
-// Check if we're on the ground
+// Simple ground check
+var was_grounded = is_grounded;
 is_grounded = place_meeting(x, y + 1, obj_floor);
 
-// Handle animation state
+// Debug visuals for ground check
+if (global.debug_visible) {
+    draw_set_color(is_grounded ? c_green : c_red);
+    draw_line(x - 10, y + sprite_height/2 + 1, x + 10, y + sprite_height/2 + 1);
+    draw_set_color(c_white);
+}
+
+// Set edge falling flag when appropriate
+if (was_grounded && !is_grounded && 
+    (creature.state_machine.is_in_state("IDLE") || creature.state_machine.is_in_state("MOVE"))) {
+    // Walking off edge detected
+    creature.falling_from_edge = true;
+    creature.state_machine.change_state("FALL");
+} else if (creature.state_machine.is_in_state("JUMP")) {
+    // If jumping, we're definitely not falling from an edge
+    creature.falling_from_edge = false;
+}
+
+// Other state transitions
+if (creature.input.jump && is_grounded && creature.jump_released &&
+    (creature.state_machine.is_in_state("IDLE") || creature.state_machine.is_in_state("MOVE"))) {
+    creature.falling_from_edge = false; // Not falling from edge when jumping
+    creature.state_machine.change_state("JUMP_SQUAT");
+}
+
+// Transition to FALL if in MOVE but not on ground (not handled by edge detection)
+if (!is_grounded && creature.state_machine.is_in_state("MOVE") && !creature.falling_from_edge) {
+    creature.state_machine.change_state("FALL");
+}
+
+// Land from falling
+if (is_grounded && creature.state_machine.is_in_state("FALL")) {
+    creature.falling_from_edge = false; // Reset flag when landing
+    if (abs(creature.xsp) > 0.1) {
+        creature.state_machine.change_state("MOVE");
+    } else {
+        creature.state_machine.change_state("IDLE");
+    }
+}
+
+// Update facing direction based on input
+if (creature.input.left) creature.facing_direction = "left";
+if (creature.input.right) creature.facing_direction = "right";
+
+// Update sprite direction based on facing direction
+sprite_direction = (creature.facing_direction == "right") ? 1 : -1;
+
+// Define is_moving variable based on input
 var is_moving = creature.input.left || creature.input.right;
 
-// Update sprite direction
-if (creature.input.left) sprite_direction = -1;
-if (creature.input.right) sprite_direction = 1;
-
-// Determine animation state based on player state and vertical speed
-if (creature.state == PlayerState.JUMPING || !is_grounded) {
-    // Check if jetpack is being used, regardless of vertical speed
-    if (creature.has_jetpack && creature.jetpack_fuel > 0 && creature.jump_released && creature.input.jump) {
+// Set animation state based on state machine state
+if (hit_timer > 0) {
+    anim_state = "hit";
+} else if (creature.state_machine.is_in_state("JUMP") || 
+          creature.state_machine.is_in_state("FALL")) {
+    // Check if jetpack is being used
+    if (creature.has_jetpack && creature.jetpack_fuel > 0 && 
+        creature.jump_released && creature.input.jump) {
         anim_state = "jetpack";
         jetpack_active = true;
-        image_speed = 1;
-        fall_animation_started = false;  // Reset falling animation when jetpack activates
+        fall_animation_started = false;
     } else if (creature.ysp < 0) {
         anim_state = "jumping";
         jetpack_active = false;
-        image_speed = 1;
-        fall_animation_started = false;  // Reset falling animation when jumping
+        fall_animation_started = false;
     } else {
         jetpack_active = false;
         if (!fall_animation_started) {
@@ -51,7 +100,7 @@ if (creature.state == PlayerState.JUMPING || !is_grounded) {
             fall_animation_started = true;
         }
     }
-} else if (creature.state == PlayerState.JUMP_SQUAT) {
+} else if (creature.state_machine.is_in_state("JUMP_SQUAT")) {
     anim_state = "jumping";
     jetpack_active = false;
     image_speed = 1;
@@ -72,4 +121,9 @@ if (creature.state == PlayerState.JUMPING || !is_grounded) {
             image_speed = 1;
         }
     }
+}
+
+// If we're not pressing jump, enable jump released flag
+if (!creature.input.jump) {
+    creature.jump_released = true;
 }

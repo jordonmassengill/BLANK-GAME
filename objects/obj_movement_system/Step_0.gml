@@ -2,17 +2,48 @@
 with(all) {
    if (!variable_instance_exists(id, "creature")) continue;
    
+   // If the creature has a state machine
+   if (variable_struct_exists(creature, "state_machine")) {
+       // Check ground state
+       var _grounded = place_meeting(x, y + 1, obj_floor);
+       
+       // IMPORTANT: Don't do automatic stepping down for state machine creatures
+       // Only apply movement horizontally as is, and vertically as is
+       if (creature.xsp != 0) {
+           // Horizontal movement without automatic stepping down
+           var steps = abs(creature.xsp);
+           var dir = sign(creature.xsp);
+           
+           for (var i = 0; i < steps; i++) {
+               // Check for collision at next position
+               if (!place_meeting(x + dir, y, obj_floor)) {
+                   x += dir;
+               } else {
+                   break; // Stop if we hit a wall
+               }
+           }
+       }
+       
+       // Vertical movement
+       if (creature.ysp != 0) {
+           move_and_collide(0, creature.ysp, obj_floor);
+       }
+       
+       continue;
+   }
+   
+   // Original movement code for entities without state machines
    var _move = 0;
    if (creature.state != PlayerState.KNOCKBACK) {  
-       if (creature.input.right) _move = creature.stats.move_speed;
-       if (creature.input.left) _move = -creature.stats.move_speed;
+       if (creature.input.right) _move = creature.stats.get_move_speed();
+       if (creature.input.left) _move = -creature.stats.get_move_speed();
        creature.xsp = _move;
    } else {
        creature.xsp *= 0.9;
        
-       var control_speed = creature.stats.move_speed * 0.1;
-       if (creature.input.right) creature.xsp = min(creature.xsp + control_speed, creature.stats.move_speed);
-       if (creature.input.left) creature.xsp = max(creature.xsp - control_speed, -creature.stats.move_speed);
+       var control_speed = creature.stats.get_move_speed() * 0.1;
+       if (creature.input.right) creature.xsp = min(creature.xsp + control_speed, creature.stats.get_move_speed());
+       if (creature.input.left) creature.xsp = max(creature.xsp - control_speed, -creature.stats.get_move_speed());
    }
 
    // Use move_and_collide for horizontal movement
