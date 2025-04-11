@@ -44,7 +44,7 @@ function draw_debug_stats(instance) {
     draw_set_color(c_white);
     
     // Health (with current/max)
-    draw_text(xx, yy, "Health: " + string(creature.current_health) + "/" + string(creature.max_health));
+    draw_text(xx, yy, "Health: " + string(entity.health.current_health) + "/" + string(entity.health.max_health));
     yy += line_height;
     
     // Base stats

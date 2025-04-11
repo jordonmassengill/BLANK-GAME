@@ -1,12 +1,17 @@
 // obj_Martin Create Event (parent = obj_npc_parent)
 event_inherited();
 
-// Create creature properties
+// Create creature properties for non-health related functionality
 creature = create_creature_properties();
 
+// Setup component entity
+entity = {};
+entity.owner_instance = id;
+add_component(entity, "health", create_health_component(1000));
+
 // Set Martin's specific stats
-creature.max_health = 1000;
-creature.current_health = 1000;
+entity.health.max_health = 1000;
+entity.health.current_health = 1000;
 creature.stats.armor = 0;
 creature.stats.resistance = 5;
 
@@ -37,3 +42,13 @@ shop_add_item(shop, "Defense Orb", 50, obj_Defenseupgrade, "Upgrades defensive s
 
 // Create shop menu
 shop_menu = create_shop_menu();
+
+// Add hit function
+hit = function(damage_amount = 0) {
+    // Apply damage using the health component
+    if (damage_amount > 0 && variable_struct_exists(entity, "health")) {
+        entity.health.take_damage(damage_amount);
+    }
+    
+    return true;
+};

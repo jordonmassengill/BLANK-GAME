@@ -90,7 +90,7 @@ if (collider != noone) {
     // Check if the colliding object is a player
     if (variable_instance_exists(collider, "is_player")) {
         // First increase max health
-        collider.creature.max_health += 50;
+        collider.entity.health.max_health += 50;
         
         // Then add health using the health system
         with(obj_health_system) {

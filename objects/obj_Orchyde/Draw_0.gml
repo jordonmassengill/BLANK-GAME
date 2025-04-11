@@ -22,17 +22,10 @@ if (hit_timer > 0) {
 
 draw_self();
 
-if (variable_instance_exists(id, "creature")) {
-    global.health_system.draw_health_bar(id);
+// Draw health bar
+if (variable_instance_exists(id, "entity") && 
+    variable_struct_exists(entity, "health")) {
+    entity.health.draw_health_bar();
 }
 
 image_xscale = original_xscale;
-/*
-// Debug visuals
-if (global.debug_visible) {
-    draw_set_color(c_yellow);
-    draw_circle(x, y, melee_range, true);  // Show melee range
-    draw_set_color(c_red);
-    draw_circle(x, y, creature.detection_range, true);  // Show detection range
-    draw_set_color(c_white);
-}

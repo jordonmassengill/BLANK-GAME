@@ -62,24 +62,57 @@ function create_base_projectile() {
             return (self.lifetime <= 0);
         },
 
-        on_hit: function(target) {
-            if (!variable_instance_exists(target, "creature")) return false;
-            if (self.shooter == target) return false;
-            
-            var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
-            
-            var proj_shooter = self.shooter;
-            var proj_props = self.projectile_props;
+        // Update to the on_hit function in create_base_projectile
+on_hit: function(target) {
+    if (!variable_instance_exists(target, "entity") || 
+        !variable_struct_exists(target.entity, "health")) return false;
+    if (self.shooter == target) return false;
+    
+    var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
+    
+    var proj_shooter = self.shooter;
+    var proj_props = self.projectile_props;
 
-            var actual_damage = global.health_system.damage_creature(target, final_damage);
-            if (proj_shooter != noone) {
-                global.health_system.apply_life_steal(proj_shooter, actual_damage);
+    // Apply damage directly to the health component
+    var actual_damage = target.entity.health.take_damage(final_damage);
+    
+    // Call hit function if it exists
+    if (variable_instance_exists(target, "hit")) {
+        target.hit(final_damage);
+    }
+    
+    // Show damage numbers
+    if (variable_global_exists("damage_number_system")) {
+        global.damage_number_system.add_number(target, final_damage, false);
+    }
+    
+    // Apply life steal
+    if (proj_shooter != noone && 
+        variable_instance_exists(proj_shooter, "creature") && 
+        variable_struct_exists(proj_shooter.creature, "stats") && 
+        variable_struct_exists(proj_shooter.creature.stats, "get_life_steal") &&
+        variable_instance_exists(proj_shooter, "entity") && 
+        variable_struct_exists(proj_shooter.entity, "health")) {
+        
+        var life_steal_amount = proj_shooter.creature.stats.get_life_steal();
+        if (life_steal_amount > 0) {
+            var heal_amount = actual_damage * life_steal_amount;
+            proj_shooter.entity.health.heal(heal_amount);
+            
+            // Show healing numbers
+            if (variable_global_exists("damage_number_system")) {
+                global.damage_number_system.add_number(proj_shooter, heal_amount, true);
             }
-            if (proj_props != undefined) {
-                apply_status_effects(target, proj_props, proj_shooter);
-            }
-            return true;
         }
+    }
+    
+    // Apply status effects
+    if (proj_props != undefined) {
+        apply_status_effects(target, proj_props, proj_shooter);
+    }
+    
+    return true;
+}
     };
 }
 

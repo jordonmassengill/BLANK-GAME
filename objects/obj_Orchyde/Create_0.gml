@@ -2,6 +2,13 @@
 event_inherited();
 creature = create_orchyde_properties();
 
+// Add health component
+add_component(entity, "health", create_health_component(400)); // Base health for Orchyde
+
+// Set health properties
+entity.health.max_health = 400; 
+entity.health.current_health = 400;
+
 // Movement and patrol properties
 patrol_point_left = x - 100;    
 patrol_point_right = x + 100;   

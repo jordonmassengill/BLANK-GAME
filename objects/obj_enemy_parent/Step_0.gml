@@ -41,14 +41,21 @@ if (closest_target != noone && closest_distance <= creature.detection_range) {
     creature.facing_direction = (direction_to_target < 90 || direction_to_target > 270) ? "right" : "left";
 }
 
-// Death check
-if (creature.current_health <= 0) {
+// Death check - use component health system
+var is_dead = false;
+if (variable_instance_exists(id, "entity") && 
+    variable_struct_exists(entity, "health") && 
+    entity.health.current_health <= 0) {
+    is_dead = true;
+}
+
+if (is_dead) {
     var player = instance_find(obj_player_creature_parent, 0);
     if (player != noone) {
         player.creature.currency += creature.currency_value;
     }
     
-    // Instead of directly calling event_user(0), destroy the instance
+    // Destroy the instance
     instance_destroy();
     exit;
 }

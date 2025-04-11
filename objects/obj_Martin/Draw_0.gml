@@ -1,9 +1,9 @@
 // obj_Martin Draw Event
 draw_self();
 
-// Draw health bar if creature exists
-if (variable_instance_exists(id, "creature")) {
-    global.health_system.draw_health_bar(id);
+// Draw health bar using component system
+if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
+    entity.health.draw_health_bar();
 }
 
 // Draw shop menu if active

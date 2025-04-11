@@ -77,7 +77,7 @@ for (var i = 0; i < array_length(stats_list); i++) {
 	var value_text = "Unknown";  // Declare at function scope before switch
 switch(stat.name) {
     case "Max Health":  
-        current_value = player.creature.max_health;
+        current_value = player.entity.health.max_health;
         current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
         break;
         

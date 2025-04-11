@@ -1,30 +1,40 @@
-// obj_guy Step Event
+// obj_guy Step Event (parent = obj_player_creature_parent)
 event_inherited();
 
 // Update state machine
 creature.state_machine.update();
 
-// Check for death
-if (creature.current_health <= 0) {
-    // Create death effect
-    var death_effect = instance_create_layer(x, y, "Instances", obj_HeroDeath);
-    death_effect.sprite_index = sHeroDeath;
-    death_effect.image_xscale = sprite_direction;
-    
-    // Create death screen
-    instance_create_layer(0, 0, "Instances", obj_death_screen);
-    
-    creature.status_manager.clear_effects();
-    instance_destroy();
-    exit;
+// Simple ground check - MOVED UP from below to avoid using is_grounded before initialization
+is_grounded = place_meeting(x, y + 1, obj_floor);
+
+// Check if we're in KNOCKBACK state and should transition out
+if (creature.state_machine.is_in_state("KNOCKBACK")) {
+    if (is_grounded) {
+        // Reset velocities
+        creature.xsp = 0;
+        creature.ysp = 0;
+        creature.jump_released = true;
+        
+        // Transition to appropriate state
+        if (creature.input.left || creature.input.right) {
+            creature.state_machine.change_state("MOVE");
+        } else {
+            creature.state_machine.change_state("IDLE");
+        }
+    }
 }
+
+// Update entity
+entity.health.update(1/60);
+
+// Sync regeneration rate from creature stats
+entity.health.regen_rate = creature.stats.health_regen;
 
 // Handle hit timer
 if (hit_timer > 0) hit_timer--;
 
-// Simple ground check
+// Track previous grounded state
 var was_grounded = is_grounded;
-is_grounded = place_meeting(x, y + 1, obj_floor);
 
 // Debug visuals for ground check
 if (global.debug_visible) {
@@ -126,4 +136,9 @@ if (hit_timer > 0) {
 // If we're not pressing jump, enable jump released flag
 if (!creature.input.jump) {
     creature.jump_released = true;
+}
+
+// Test damage - press T to apply damage directly to component
+if (keyboard_check_pressed(ord("T"))) {
+    entity.health.take_damage(10);
 }

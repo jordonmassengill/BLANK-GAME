@@ -54,8 +54,8 @@ if (stats_menu_active) {
             switch (selected.name) {
                 // Life upgrades
                 case "Max Health":
-                    player.creature.max_health += 50;
-                    player.creature.current_health += 50;
+                    player.entity.health.max_health += 50;
+                    player.entity.health.current_health += 50;
                     points_spent++;
                     break;
                     

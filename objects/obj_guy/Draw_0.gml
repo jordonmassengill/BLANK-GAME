@@ -1,6 +1,7 @@
 // obj_guy Draw Event
-// Save the current scale
-var original_xscale = image_xscale;
+// Save the current scale - don't use var to ensure scope availability
+original_xscale = image_xscale;
+
 // Apply direction flip
 image_xscale = sprite_direction * abs(image_xscale);
 
@@ -59,7 +60,7 @@ draw_self();
 // Reset scale to avoid affecting other objects
 image_xscale = original_xscale;
 
-// Draw health bar
-if (variable_instance_exists(id, "creature")) {
-    global.health_system.draw_health_bar(id);
+// Draw health bar using the component system
+if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
+    entity.health.draw_health_bar();
 }

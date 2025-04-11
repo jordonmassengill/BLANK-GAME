@@ -2,6 +2,6 @@
 event_inherited();
 
 function apply_effect(target) {
-    target.creature.max_health += 50;
-    target.creature.current_health = target.creature.max_health;
+    target.entity.health.max_health += 50;
+    target.entity.health.current_health = target.entity.health.max_health;
 }

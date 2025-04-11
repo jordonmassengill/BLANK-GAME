@@ -1,6 +1,12 @@
 // obj_Martin Step Event
 event_inherited();
 
+// Sync entity position with object
+if (variable_instance_exists(id, "entity")) {
+    entity.x = x;
+    entity.y = y;
+}
+
 // Handle menu
 if (shop_menu[? "active"]) {
     var player = instance_find(obj_player_creature_parent, 0);
