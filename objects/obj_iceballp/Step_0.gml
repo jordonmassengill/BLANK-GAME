@@ -1,8 +1,9 @@
-// obj_iceball Step Event
 event_inherited();
-
-// Override just the effect function
 function apply_effect(target) {
-    target.creature.has_iceball = true;
-	target.creature.can_shoot_iceball = true;
+    // This 'if' statement is the corrected line.
+    if (variable_instance_exists(target, "entity") && variable_struct_exists(target.entity, "components") && variable_struct_exists(target.entity.components, "weapon")) {
+        var weapon_data = { base_cooldown: 50, pickup_obj_index: object_index };
+        return target.entity.weapon.pickup_weapon("iceball", weapon_data);
+    }
+    return false;
 }

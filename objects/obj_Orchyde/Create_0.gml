@@ -9,6 +9,13 @@ add_component(entity, "health", create_health_component(400)); // Base health fo
 entity.health.max_health = 400; 
 entity.health.current_health = 400;
 
+// Weapon Component to Orchyde ---
+var weapon_comp = create_weapon_component(entity);
+// Use pickup_weapon instead of add_weapon
+var weapon_data = { base_cooldown: 120, pickup_obj_index: undefined };
+weapon_comp.pickup_weapon("shotgun", weapon_data); 
+add_component(entity, "weapon", weapon_comp);
+
 // Movement and patrol properties
 patrol_point_left = x - 100;    
 patrol_point_right = x + 100;   

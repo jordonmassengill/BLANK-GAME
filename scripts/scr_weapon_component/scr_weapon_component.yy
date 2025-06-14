@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_weapon_component",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_weapon_component",
+  "parent":{
+    "name":"scr_components",
+    "path":"folders/Scripts/scr_components.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,10 +1,10 @@
 // obj_bombp Create Event (parent = obj_pickup_parent)
+event_inherited();
 function apply_effect(target) {
-    if (variable_instance_exists(target, "creature")) {
-        target.creature.has_bomb = true;
-        target.creature.can_throw_bomb = true;
-        target.creature.bomb_cooldown = 0;
-        return true;
+    // This 'if' statement is the corrected line.
+    if (variable_instance_exists(target, "entity") && variable_struct_exists(target.entity, "components") && variable_struct_exists(target.entity.components, "weapon")) {
+        var weapon_data = { base_cooldown: 100, pickup_obj_index: object_index };
+        return target.entity.weapon.pickup_weapon("bomb", weapon_data);
     }
     return false;
 }

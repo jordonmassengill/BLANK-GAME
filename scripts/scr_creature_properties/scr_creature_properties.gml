@@ -26,6 +26,8 @@ function create_creature_properties() {
 			menu_select: false,
 			menu_back: false,
 			interact: false,
+			swap_weapon_pressed: false,
+
 		},
 		
 		// --- Ability Properties ---

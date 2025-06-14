@@ -4,6 +4,7 @@ event_inherited(); // Handles status effects
 // 1. Update all core components
 entity.health.update();
 entity.movement.update(); // This now handles all state changes, physics, and jump cooldowns
+entity.weapon.update();   // --- NEW: This updates weapon cooldowns ---
 
 // 2. Handle non-component logic
 // Update hit timer
@@ -18,6 +19,11 @@ if (creature.input.right) sprite_direction = 1;
 // Test damage - press T to apply damage directly to component
 if (keyboard_check_pressed(ord("T"))) {
 	entity.health.take_damage(10);
+}
+
+// Handle Weapon Switching Input ---
+if (creature.input.swap_weapon_pressed) {
+    entity.weapon.swap_active_weapon();
 }
 
 // Pass the final speeds from the component to the creature struct

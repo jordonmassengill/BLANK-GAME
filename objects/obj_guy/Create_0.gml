@@ -26,6 +26,11 @@ add_component(entity, "health", health_comp);
 
 // Add NEW Movement Component
 add_component(entity, "movement", create_movement_component(entity, creature.stats));
+
+// --- NEW: Add Weapon Component ---
+// Player now starts with NO weapons.
+var weapon_comp = create_weapon_component(entity);
+add_component(entity, "weapon", weapon_comp);
 // --- END COMPONENT SETUP ---
 
 

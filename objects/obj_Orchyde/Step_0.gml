@@ -31,14 +31,11 @@ if (nearest_player != noone) {
             if (distance_to_player > melee_range) {
                 if (creature.shotgun_cooldown <= 0) {
                     var direction_to_player = point_direction(x, y, nearest_player.x, nearest_player.y);
-                    with(obj_weapon_system) {
-                        var shot_fired = shoot_shotgun(other, direction_to_player);
-                        if (shot_fired) {
-                            other.is_shooting = true;
-                            other.sprite_index = sOrchydeShoot;
-                            other.image_index = 0;
-                        }
-                    }
+                    entity.weapon.fire("primary");
+					// The component handles cooldowns and firing. We just need to set the animation state.
+					is_shooting = true;
+					sprite_index = sOrchydeShoot;
+					image_index = 0;
                 } else {
                     var move_right = nearest_player.x > x;
                     var has_floor_ahead = position_meeting(
