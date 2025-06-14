@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_component_system",
+  "%Name":"scr_movement_component",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_component_system",
+  "name":"scr_movement_component",
   "parent":{
     "name":"scr_components",
     "path":"folders/Scripts/scr_components.yy",
