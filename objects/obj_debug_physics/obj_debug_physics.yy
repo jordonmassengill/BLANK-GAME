@@ -1,20 +1,18 @@
 {
   "$GMObject":"",
-  "%Name":"obj_iceballp",
+  "%Name":"obj_debug_physics",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_iceballp",
+  "name":"obj_debug_physics",
   "overriddenProperties":[],
   "parent":{
-    "name":"obj_weapons",
-    "path":"folders/Objects/obj_Items/obj_weapons.yy",
+    "name":"obj_players",
+    "path":"folders/Objects/obj_creatures/obj_players.yy",
   },
-  "parentObjectId":{
-    "name":"obj_pickup_parent",
-    "path":"objects/obj_pickup_parent/obj_pickup_parent.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -33,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sIceballP",
-    "path":"sprites/sIceballP/sIceballP.yy",
+    "name":"sDebug",
+    "path":"sprites/sDebug/sDebug.yy",
   },
   "spriteMaskId":null,
   "visible":true,
