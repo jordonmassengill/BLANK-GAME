@@ -18,6 +18,8 @@ if (player.creature.input.stats_menu_pressed) {
 		upgrade_mode = false; // Also reset upgrade mode if it was active
 		target_player = noone; // Clear the stored player reference
 		instance_activate_all();
+		player.entity.movement.force_state_re_evaluation();
+
 	}
 	// Case 2: The menu is not active, so this is a request to OPEN it.
 	else {
@@ -162,6 +164,8 @@ if (stats_menu_active) {
             stats_menu_active = false;
             points_spent = 0;
             instance_activate_all();
+			player.entity.movement.force_state_re_evaluation();
+
         }
     }
 }

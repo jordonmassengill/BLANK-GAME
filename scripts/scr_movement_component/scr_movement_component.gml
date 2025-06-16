@@ -200,6 +200,26 @@ function create_movement_component(owner_entity, owner_stats) {
 				case "KNOCKBACK":  return "hit";
 				default:           return "idle";
 			}
-		}
+		},
+		force_state_re_evaluation: function() {
+    var inst = self.owner.owner_instance;
+
+    // Check our physical state right now
+    with (inst) {
+        self.is_grounded = place_meeting(x, y + 1, obj_floor);
+    }
+
+    // Based on our physical state, force the correct state machine state
+    if (self.is_grounded) {
+        self.state_machine.change_state("IDLE");
+        self.ysp = 0; // Cancel any lingering vertical speed
+    } else {
+        self.state_machine.change_state("FALL");
+    }
+    
+    // Sync up the was_grounded variable to prevent a false landing on the next frame
+    self.was_grounded = self.is_grounded;
+    return self;
+}
 	}.init();
 }

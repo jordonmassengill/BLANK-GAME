@@ -27,6 +27,12 @@ with(obj_player_creature_parent) {
                 case 0: // Resume
                     other.game_paused = false;
                     instance_activate_all();
+					
+					with (obj_player_creature_parent) {
+            if (entity.has_component("movement")) {
+                entity.movement.force_state_re_evaluation();
+            }
+        }
                     break;
                 case 1: // Restart
                     other.game_paused = false;
