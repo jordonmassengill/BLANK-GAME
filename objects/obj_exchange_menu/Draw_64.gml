@@ -76,7 +76,7 @@ var player = instance_find(obj_player_creature_parent, 0);
 if (!player) exit;
 
 // Draw inventory items with stacking support
-var items = player.creature.inventory.items;
+var items = player.entity.inventory.items;
 var display_index = 0;
 
 for (var i = 0; i < array_length(items); i++) {

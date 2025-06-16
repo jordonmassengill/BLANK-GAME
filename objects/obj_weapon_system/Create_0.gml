@@ -100,24 +100,27 @@ function shoot_ghoststrike(shooter, aim_angle) {
     });
 }
 
+// NEW shoot_ghostball
 function shoot_ghostball(shooter, aim_angle) {
     return shoot_projectile({
         shooter: shooter,
         projectile_obj: obj_ghostball,
         aim_angle: aim_angle,
-        cooldown_var: "ghostball_cooldown",
-        base_cooldown: shooter.creature.ghostball_cooldown_max,
+        // The cooldown_var is no longer used by the new component, but we can leave it
+        cooldown_var: "ghostball_cooldown", 
+        base_cooldown: 300, // <-- 5 seconds, hardcoded
         vertical_offset: -16,
     });
 }
 
+// NEW shoot_shotgun
 function shoot_shotgun(shooter, aim_angle) {
     return shoot_projectile({
         shooter: shooter,
         projectile_obj: obj_shotgun_pellet,
         aim_angle: aim_angle,
         cooldown_var: "shotgun_cooldown",
-        base_cooldown: shooter.creature.shotgun_cooldown_max, // Use the max from creature properties
+        base_cooldown: 120, // <-- 2 seconds, hardcoded
         num_pellets: 5,
         spread_angle: 30,
     });

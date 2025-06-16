@@ -1,12 +1,12 @@
 // obj_stats_menu Draw GUI Event
-if (!stats_menu_active) exit;
+if (!stats_menu_active || !instance_exists(target_player)) exit;
 
-var player = instance_find(obj_player_creature_parent, 0);
-if (!player) exit;
+// We can now safely assume 'target_player' is a valid, fully-initialized player instance.
+var player = target_player;
 
 // Helper function to calculate level from current value
 calculate_stat_level = function(current_value, base_value, per_level_value) {
-    if (current_value < base_value) return 1;  // Always minimum level 1
+    if (current_value < base_value) return 1; // Always minimum level 1
     return floor(((current_value - base_value) / per_level_value) + 1);
 };
 
@@ -74,93 +74,76 @@ for (var i = 0; i < array_length(stats_list); i++) {
     var current_level = 1;
     
     // Get current values
-	var value_text = "Unknown";  // Declare at function scope before switch
-switch(stat.name) {
-    case "Max Health":  
-        current_value = player.entity.health.max_health;
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Life Steal": 
-        current_value = stats.get_life_steal() * 100;
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Regeneration": 
-        current_value = stats.get_health_regen();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Physical Damage": 
-        current_value = stats.get_physical_damage();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Magical Damage": 
-        current_value = stats.get_magical_damage();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Elemental Power": 
-        current_value = stats.get_elemental_power();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Move Speed": 
-        current_value = stats.get_move_speed();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Rate of Fire": 
-        current_value = stats.get_rate_of_fire();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Projectile Speed": 
-        current_value = stats.get_proj_speed();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Armor": 
-        current_value = stats.get_armor();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Resistance": 
-        current_value = stats.get_resistance();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-        
-    case "Crit Level":
-        current_value = stats.crit_level;
-        current_level = current_value;
-        if (current_level > 1) {
-            var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;
-            var multiplier = 1 + ((current_level - 1) * 0.25);
-            value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
-        } else {
-            value_text = "Inactive";
-        }
-        break;
-        
-    case "Area of Effect":
-        current_value = stats.get_aoe_damage();
-        current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
-        break;
-}
+	var value_text = "Unknown"; // Declare at function scope before switch
+    switch(stat.name) {
+        case "Max Health":    
+            current_value = player.entity.health.max_health;
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Life Steal":    
+            current_value = stats.get_life_steal() * 100;
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Regeneration":    
+            current_value = stats.get_health_regen();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Physical Damage":    
+            current_value = stats.get_physical_damage();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Magical Damage":    
+            current_value = stats.get_magical_damage();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Elemental Power":    
+            current_value = stats.get_elemental_power();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Move Speed":    
+            current_value = stats.get_move_speed();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Rate of Fire":    
+            current_value = stats.get_rate_of_fire();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Projectile Speed":    
+            current_value = stats.get_proj_speed();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Armor":    
+            current_value = stats.get_armor();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Resistance":    
+            current_value = stats.get_resistance();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+        case "Crit Level":
+            current_value = stats.crit_level;
+            current_level = current_value;
+            if (current_level > 1) {
+                var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;
+                var multiplier = 1 + ((current_level - 1) * 0.25);
+                value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
+            } else {
+                value_text = "Inactive";
+            }
+            break;
+        case "Area of Effect":
+            current_value = stats.get_aoe_damage();
+            current_level = calculate_stat_level(current_value, stat.base, stat.per_level);
+            break;
+    }
 
     // In upgrade mode, check for available upgrades
     if (upgrade_mode) {
         var required_type = stat.upgradeable_by;
-        var available_points = 0;
-        var items = player.creature.inventory.items;
-
-        // Count available points for the required type
-        for (var j = 0; j < array_length(items); j++) {
-            if (items[j] != undefined && items[j].type == required_type) {
-                available_points++;
-            }
-        }
+        
+        // --- THIS IS THE FIX ---
+        // We now use our simple helper function instead of manually looping through the inventory.
+        var available_points = player.entity.inventory.count_item(required_type);
 
         // If upgrades are available, use the appropriate color
         if (available_points > points_spent) {
@@ -172,9 +155,9 @@ switch(stat.name) {
             draw_set_alpha(0.3);
             for(var g = 0; g < 360; g += 45) {
                 draw_text_transformed(
-                    start_x + lengthdir_x(2, g), 
+                    start_x + lengthdir_x(2, g),    
                     y_pos + lengthdir_y(2, g),
-                    stat.name + " (Level " + string(current_level) + ")", 
+                    stat.name + " (Level " + string(current_level) + ")",    
                     1.5, 1.5, 0
                 );
             }
@@ -186,76 +169,67 @@ switch(stat.name) {
             if (i == selected_stat) {
                 // Show upgrade instructions with matching color
                 draw_text_transformed(
-                    start_x + 900, 
-                    y_pos, 
-                    "Press SPACE to upgrade (" + 
-                    string(available_points - points_spent) + " " + 
-                    required_type + " points remaining)", 
+                    start_x + 900,    
+                    y_pos,    
+                    "Press SPACE to upgrade (" +    
+                    string(available_points - points_spent) + " " +    
+                    required_type + " points remaining)",    
                     1, 1, 0
                 );
             }
         }
     }
-	// Calculate available points for current stat
-var available_points = 0;
-if (upgrade_mode) {
-    var required_type = stat.upgradeable_by;
-    var items = player.creature.inventory.items;
-
-    // Count available points for the required type
-    for (var j = 0; j < array_length(items); j++) {
-        if (items[j] != undefined && items[j].type == required_type) {
-            available_points++;
-        }
-    }
-}
 	
-	
-
     // Regular stat drawing (non-upgrade highlighting)
-if (i == selected_stat) {
-    if (!upgrade_mode || available_points <= points_spent) {
-        // Default cyan selection color when not upgradeable
-        draw_set_color(make_color_rgb(0, 255, 255));
-        draw_set_alpha(0.3);
-        for(var g = 0; g < 360; g += 45) {
-            draw_text_transformed(
-                start_x + lengthdir_x(2, g), 
-                y_pos + lengthdir_y(2, g),
-                stat.name + " (Level " + string(current_level) + ")", 
-                1.5, 1.5, 0
-            );
+    if (i == selected_stat) {
+        // We need to re-check available points here for the drawing logic, or pass it down.
+        var points_for_highlight = 0;
+        if (upgrade_mode) {
+            points_for_highlight = player.entity.inventory.count_item(stat.upgradeable_by);
         }
+
+        if (!upgrade_mode || points_for_highlight <= points_spent) {
+            // Default cyan selection color when not upgradeable
+            draw_set_color(make_color_rgb(0, 255, 255));
+            draw_set_alpha(0.3);
+            for(var g = 0; g < 360; g += 45) {
+                draw_text_transformed(
+                    start_x + lengthdir_x(2, g),    
+                    y_pos + lengthdir_y(2, g),
+                    stat.name + " (Level " + string(current_level) + ")",    
+                    1.5, 1.5, 0
+                );
+            }
+        }
+        draw_set_alpha(1);
+        draw_text_transformed(start_x - 40, y_pos, ">", 2, 2, 0);
+        draw_set_color(make_color_rgb(0, 255, 255));
+    } else {
+        draw_set_color(c_white);
     }
-    draw_set_alpha(1);
-    draw_text_transformed(start_x - 40, y_pos, ">", 2, 2, 0);
-    draw_set_color(make_color_rgb(0, 255, 255));
-} else {
-    draw_set_color(c_white);
-}
 
     // Draw stat name and level
     draw_set_alpha(1);
     draw_text_transformed(start_x, y_pos, stat.name + " (Level " + string(current_level) + ")", 1.5, 1.5, 0);
     
     // Draw current value
-if (stat.name == "Crit Level") {
-    if (current_level > 1) {
-        var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60;  // Convert frames to seconds
-        var multiplier = 1 + ((current_level - 1) * 0.25);
-        value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
+    if (stat.name == "Crit Level") {
+        if (current_level > 1) {
+            var seconds_total = (stats.base_crit_cooldown - ((current_level - 1) * 60)) / 60; // Convert frames to seconds
+            var multiplier = 1 + ((current_level - 1) * 0.25);
+            value_text = string_format(multiplier, 1, 2) + "x/" + string(seconds_total) + "s";
+        } else {
+            value_text = "Inactive";
+        }
     } else {
-        value_text = "Inactive";
+        value_text = stat.name == "Life Steal" ?    
+            string_format(current_value, 1, 1) + "%" :
+            string_format(current_value, 1, 2);
     }
-} else {
-    value_text = stat.name == "Life Steal" ? 
-        string_format(current_value, 1, 1) + "%" :
-        string_format(current_value, 1, 2);
-}
 
-// Draw current value
-draw_set_color(c_white);
-draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0);
+    // Draw current value
+    draw_set_color(c_white);
+    draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0);
     
     // Draw level bar
     var bar_x = start_x + 650;
@@ -274,8 +248,8 @@ draw_text_transformed(start_x + 400, y_pos, "[" + value_text + "]", 1.5, 1.5, 0)
     // Bar segments
     draw_set_color(make_color_rgb(0, 100, 100));
     for(var s = 1; s < 10; s++) {
-        draw_line(bar_x + (bar_width * s/10), y_pos, 
-                 bar_x + (bar_width * s/10), y_pos + bar_height);
+        draw_line(bar_x + (bar_width * s/10), y_pos,    
+                  bar_x + (bar_width * s/10), y_pos + bar_height);
     }
     
     // Bar border
@@ -309,9 +283,8 @@ var slot_padding = 10;
 var slots_per_row = 8;
 
 // Draw inventory slots
-var creature = player.creature;
-if (is_struct(creature) && variable_struct_exists(creature, "inventory")) {
-    var items = creature.inventory.items;
+if (variable_instance_exists(player, "entity") && player.entity.has_component("inventory")) {
+    var items = player.entity.inventory.items; // This part was already correct
     var len = array_length(items);
     
     for(var i = 0; i < len; i++) {

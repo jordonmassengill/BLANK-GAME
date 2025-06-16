@@ -141,7 +141,7 @@ function shop_menu_draw(menu, shop, x, y) {
     draw_text_transformed(inventory_x, inventory_y, "INVENTORY", 1.5, 1.5, 0);
     
     if (player != noone) {
-    var inventory_items = player.creature.inventory.items;
+    var inventory_items = player.entity.inventory.items;
     var inv_y = inventory_y + 40;
     
     for (var i = 0; i < array_length(inventory_items); i++) {

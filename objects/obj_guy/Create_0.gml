@@ -31,6 +31,7 @@ add_component(entity, "movement", create_movement_component(entity, creature.sta
 // Player now starts with NO weapons.
 var weapon_comp = create_weapon_component(entity);
 add_component(entity, "weapon", weapon_comp);
+add_component(entity, "inventory", create_inventory_component(16));
 // --- END COMPONENT SETUP ---
 
 

@@ -1,5 +1,7 @@
 // obj_Orchyde Step Event
 event_inherited();
+entity.weapon.update(); // <-- ADD THIS LINE to make its cooldown work.
+
 // Handle hit timer
 if (hit_timer > 0) {
     hit_timer--;
@@ -12,6 +14,8 @@ if (hit_timer > 0) {
 
 var nearest_player = instance_nearest(x, y, obj_player_creature_parent);
 var player_in_range = false;
+
+// In obj_Orchyde/Step_0.gml
 
 if (nearest_player != noone) {
     var distance_to_player = point_distance(x, y, nearest_player.x, nearest_player.y);
@@ -27,16 +31,25 @@ if (nearest_player != noone) {
         creature.input.left = false;
         creature.input.right = false;
 
+        // Only decide on an action if not already in the middle of one
         if (!is_melee_attacking && !is_shooting) {
+            
+            // --- NEW LOGIC START ---
+
+            // Check if player is outside melee range
             if (distance_to_player > melee_range) {
-                if (creature.shotgun_cooldown <= 0) {
+                
+                // If the weapon CAN be fired...
+                if (entity.weapon.can_fire()) {
                     var direction_to_player = point_direction(x, y, nearest_player.x, nearest_player.y);
-                    entity.weapon.fire("primary");
-					// The component handles cooldowns and firing. We just need to set the animation state.
-					is_shooting = true;
-					sprite_index = sOrchydeShoot;
-					image_index = 0;
-                } else {
+                    entity.weapon.fire(closest_target);
+                    
+                    is_shooting = true;
+                    sprite_index = sOrchydeShoot;
+                    image_index = 0;
+                } 
+                // ELSE, if the weapon is on cooldown, run towards the player.
+                else {
                     var move_right = nearest_player.x > x;
                     var has_floor_ahead = position_meeting(
                         x + (move_right ? edge_check_dist : -edge_check_dist), 
@@ -45,11 +58,9 @@ if (nearest_player != noone) {
                     );
                     
                     if (has_floor_ahead) {
-                        // Set direction flags
                         creature.input.right = move_right;
                         creature.input.left = !move_right;
                         
-                        // IMPORTANT: Apply movement using stats speed
                         var actual_speed = creature.stats.get_move_speed();
                         if (move_right) {
                             x += actual_speed;
@@ -58,7 +69,9 @@ if (nearest_player != noone) {
                         }
                     }
                 }
-            } else if (melee_cooldown <= 0) {
+            } 
+            // ELSE, if we are inside melee range...
+            else if (melee_cooldown <= 0) {
                 is_melee_attacking = true;
                 sprite_index = sOrchydeMelee;
                 image_index = 0;
@@ -74,6 +87,8 @@ if (nearest_player != noone) {
                 hitbox.damage = melee_damage;
                 hitbox.life_time = 15;
             }
+            
+            // --- NEW LOGIC END ---
         }
     }
 }

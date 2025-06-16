@@ -10,10 +10,6 @@ function create_ghost_properties() {
     props.aggro_range = 200;        // Ghosts have larger aggro range
 	props.currency_value = 46;
     
-    // Add shooting properties
-    props.can_shoot_ghostball = true;
-    props.ghostball_cooldown = 0;
-    props.ghostball_cooldown_max = 300;  // 5 seconds (60 steps per second)
     
     return props;
 }
@@ -46,11 +42,6 @@ function create_orchyde_properties() {
 	props.stats.move_speed = 3;
 	props.currency_value = 181;
     
-    // Shotgun properties
-    props.has_shotgun = true;
-    props.can_shoot_shotgun = true;
-    props.shotgun_cooldown = 0;
-    props.shotgun_cooldown_max = 120;  // Debug this value
     
     return props;
 }

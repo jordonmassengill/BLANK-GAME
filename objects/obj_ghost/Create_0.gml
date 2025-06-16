@@ -9,9 +9,11 @@ add_component(entity, "health", create_health_component(200)); // Base health fo
 entity.health.max_health = 200;
 entity.health.current_health = 200;
 
-// Weapon Component to Ghost ---
+// NEW Ghost Create Event logic
 var weapon_comp = create_weapon_component(entity);
-// Use pickup_weapon instead of add_weapon
-var weapon_data = { base_cooldown: 300, pickup_obj_index: undefined };
+var weapon_data = { 
+    base_cooldown: 300, 
+    pickup_obj_index: undefined // No pickup object for enemy weapons
+};
 weapon_comp.pickup_weapon("ghostball", weapon_data);
 add_component(entity, "weapon", weapon_comp);

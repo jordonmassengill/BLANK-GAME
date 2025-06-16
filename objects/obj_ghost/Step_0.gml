@@ -9,13 +9,8 @@ if (closest_target != noone && closest_distance <= creature.detection_range) {
     
     // Replace the old check with a direct call to the component's fire method
     // The component itself will check the cooldown.
-    entity.weapon.fire("primary");
+    entity.weapon.fire(closest_target);
     is_shooting = true;
     sprite_index = sGhost;
     image_index = 0;
-}
-
-// Reset shooting state after cooldown is back
-if (creature.ghostball_cooldown <= 0) {
-    is_shooting = false;
 }

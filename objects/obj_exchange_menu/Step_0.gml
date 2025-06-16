@@ -11,12 +11,14 @@ active_pulse = 0.5 + 0.5 * abs(sin(timer / 10));
 var player = instance_find(obj_player_creature_parent, 0);
 if (!player) exit;
 
-// Calculate total display count first
+// Calculate total display count first (This logic is correct for how the UI is drawn)
 var total_display_count = 0;
-var items = player.creature.inventory.items;
+var items = player.entity.inventory.items;
 for (var i = 0; i < array_length(items); i++) {
     if (items[i] != undefined && array_contains(valid_types, items[i].type)) {
-        var count = variable_struct_exists(items[i], "count") ? items[i].count : 1;
+        // This part is for the old stacking system which is no longer in use.
+        // We can simplify this later, but for now it's not breaking anything.
+        var count = 1; // Assume count is 1 since we aren't stacking this way anymore
         total_display_count += count;
     }
 }
@@ -65,7 +67,7 @@ if (player.creature.input.menu_select) {
     if (cursor_position == "inventory") {
         // Toggle selection of inventory slot
         var display_index = selected_item;
-        var array_index = array_get_index(selected_inventory_slots, display_index); // Fixed here
+        var array_index = array_get_index(selected_inventory_slots, display_index);
         
         if (array_index == -1) {
             array_push(selected_inventory_slots, display_index);
@@ -82,7 +84,7 @@ if (player.creature.input.menu_select) {
         
         // First pass: Create array of inventory slots to remove
         var slots_to_clear = array_create(new_orbs_to_create);
-        for (var i = 0; i < new_orbs_to_create; i++) {
+        for (var i = 0; i < new_or_bs_to_create; i++) {
             var display_index = selected_inventory_slots[i];
             slots_to_clear[i] = ds_map_find_value(display_to_inventory_slot, display_index);
         }
@@ -93,19 +95,15 @@ if (player.creature.input.menu_select) {
         // Remove the orbs from inventory
         for (var i = 0; i < array_length(slots_to_clear); i++) {
             if (slots_to_clear[i] != undefined) {
-                player.creature.inventory.remove_item(slots_to_clear[i]);
+                player.entity.inventory.remove_item(slots_to_clear[i]);
             }
         }
         
         // Add new orbs
         for (var i = 0; i < new_orbs_to_create; i++) {
-            var new_orb = {
-                name: new_type.name,
-                color: new_type.color,
-                type: new_type.type,
-                description: "Exchanged orb of " + new_type.type + " type."
-            };
-            player.creature.inventory.add_item(new_orb);
+            // The inventory component handles creating the orb data.
+            // We just need to tell it which orb to add.
+            player.entity.inventory.add_item("orb_" + new_type.type);
         }
         
         // Clear selections

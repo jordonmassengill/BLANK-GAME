@@ -1,18 +1,9 @@
-//Create Event for obj_Lifeupgrade (parent = obj_pickup_parent)
-lifeitem = {
-    name: "Life Orb",
-    color: c_red,  // This will be the color shown in inventory
-    type: "life",  // We can use this later to determine what stats it can upgrade
-    description: "Can be used to upgrade Health, Regen, or Life Steal"
-}
+// The new, simplified Create Event for obj_Lifeupgrade
+event_inherited(); // Inherits from obj_pickup_parent
 
+// This is all the logic we need now!
 function apply_effect(target) {
-    if (variable_instance_exists(target, "creature") && 
-        variable_struct_exists(target.creature, "inventory")) {
-        // Add the item to inventory
-        target.creature.inventory.add_item(lifeitem);
-        // Return true so the object knows to destroy itself
-        return true;
-    }
-    return false;
+    // Just tell the target's inventory to add a "life_orb"
+    // The inventory component itself knows what that means.
+    return target.entity.inventory.add_item("orb_life");
 }

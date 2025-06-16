@@ -7,6 +7,7 @@ upgrade_mode = false;
 scanline_offset = 0;
 points_spent = 0;
 selected_stat = 0;
+target_player = noone;
 
 // Add the helper function definition
 calculate_stat_level = function(current_value, base_value, per_level_value) {

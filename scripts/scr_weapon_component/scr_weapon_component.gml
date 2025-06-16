@@ -9,8 +9,7 @@ function create_weapon_component(owner_entity) {
 		//----------------------------------------------------------------------
 		owner: owner_entity,
 		
-		// Holds the two weapon slots. Each slot is either 'undefined'
-		// or a struct: { name: "fireball", data: { ... } }
+		// Holds the two weapon slots. Each is either 'undefined' or a weapon struct.
 		slots: [undefined, undefined],
 		
 		// Tracks the active slot index (0 or 1).
@@ -19,7 +18,16 @@ function create_weapon_component(owner_entity) {
 		//----------------------------------------------------------------------
 		// METHODS
 		//----------------------------------------------------------------------
-
+		
+        /// @function can_fire()
+        /// @description Checks if the currently active weapon can be fired.
+        can_fire: function() {
+            var active_weapon = self.slots[self.active_slot];
+            if (active_weapon == undefined) {
+                return false; // No weapon equipped
+            }
+            return (active_weapon.data.cooldown <= 0);
+        },
 		/// @function init()
 		/// @description Initializes the component.
 		init: function() {
@@ -32,7 +40,7 @@ function create_weapon_component(owner_entity) {
 			// First, check if we already have this weapon in either slot
 			if ((self.slots[0] != undefined && self.slots[0].name == weapon_name) ||
 			    (self.slots[1] != undefined && self.slots[1].name == weapon_name)) {
-				// We already have it, so don't pick it up. Could add ammo logic here later.
+				// We already have it, so don't pick it up.
 				return false; 
 			}
 
@@ -73,10 +81,9 @@ function create_weapon_component(owner_entity) {
 			var inst = self.owner.owner_instance;
 			var drop = instance_create_layer(inst.x, inst.y, "Instances", pickup_obj_index);
 			
-			// Give it a "pop out" effect so it's visible to the player
-			drop.vspeed = -2.5; // Pop upwards
-			drop.hspeed = random_range(-1.5, 1.5); // Pop out left or right
-			drop.pickup_cooldown = 60; // 1-second cooldown before it can be re-acquired
+			// Set the 1-second pickup cooldown we discussed.
+			// The hspeed and vspeed lines are removed so it doesn't "shoot off".
+			drop.pickup_cooldown = 60;
 		},
 
 		/// @function swap_active_weapon()
@@ -90,7 +97,7 @@ function create_weapon_component(owner_entity) {
 		},
 		
 		/// @function update()
-		/// @description Updates cooldowns for both weapons every frame.
+		/// @description Updates cooldowns for both weapons every frame. Must be called in the owner's Step Event.
 		update: function() {
 			for (var i = 0; i < 2; i++) {
 				if (self.slots[i] != undefined && self.slots[i].data.cooldown > 0) {
@@ -99,15 +106,12 @@ function create_weapon_component(owner_entity) {
 			}
 		},
 
-		/// @function fire()
-		/// @description Fires the currently equipped weapon.
-		fire: function() {
+		/// @function fire(target)
+		/// @description Fires the currently equipped weapon. Can optionally take a target for AI aiming.
+		fire: function(target = noone) {
 			var active_weapon = self.slots[self.active_slot];
 			
-			// 1. Check if there's a weapon equipped at all
 			if (active_weapon == undefined) return;
-			
-			// 2. Check if the weapon is off cooldown
 			if (active_weapon.data.cooldown > 0) return;
 			
 			var inst = self.owner.owner_instance;
@@ -115,18 +119,24 @@ function create_weapon_component(owner_entity) {
 			var aim_angle = 0;
 			var shot_fired = false;
 			
-			// 3. Determine aim angle (for both controller and mouse)
-			if (creature.input.using_controller) {
-				if (abs(creature.input.aim_x) > 0.2 || abs(creature.input.aim_y) > 0.2) {
-					aim_angle = point_direction(0, 0, creature.input.aim_x, creature.input.aim_y);
-				} else {
-					aim_angle = (inst.sprite_direction == 1) ? 0 : 180;
-				}
+			// AIMING LOGIC: Handles both AI and Player
+			if (is_struct(target) || instance_exists(target)) {
+			// AI Aiming: If a valid target is provided, aim directly at it.
+				 aim_angle = point_direction(inst.x, inst.y, target.x, target.y);
 			} else {
-				aim_angle = point_direction(inst.x, inst.y, creature.input.target_x, creature.input.target_y);
+				// Player Aiming: If no target, use the player's input struct.
+				if (creature.input.using_controller) {
+					if (abs(creature.input.aim_x) > 0.2 || abs(creature.input.aim_y) > 0.2) {
+						aim_angle = point_direction(0, 0, creature.input.aim_x, creature.input.aim_y);
+					} else {
+						aim_angle = (inst.sprite_direction == 1) ? 0 : 180;
+					}
+				} else {
+					aim_angle = point_direction(inst.x, inst.y, creature.input.target_x, creature.input.target_y);
+				}
 			}
 
-			// 4. Fire the projectile by calling the global shoot functions
+			// FIRE PROJECTILE
 			with(obj_weapon_system) {
 				switch(active_weapon.name) {
 					case "fireball":    shot_fired = shoot_fireball(inst, aim_angle); break;
@@ -136,13 +146,12 @@ function create_weapon_component(owner_entity) {
 					case "iceball":     shot_fired = shoot_iceball(inst, aim_angle); break;
 					case "electro":     shot_fired = shoot_electro(inst, aim_angle); break;
 					case "ghoststrike": shot_fired = shoot_ghoststrike(inst, aim_angle); break;
-                    // Enemy weapons, if they were to become usable
-                    case "ghostball":   shot_fired = shoot_ghostball(inst, aim_angle); break;
-                    case "shotgun":     shot_fired = shoot_shotgun(inst, aim_angle); break;
+					case "ghostball":   shot_fired = shoot_ghostball(inst, aim_angle); break;
+					case "shotgun":     shot_fired = shoot_shotgun(inst, aim_angle); break;
 				}
 			}
 			
-			// 5. If successful, put the weapon on cooldown
+			// SET COOLDOWN
 			if (shot_fired) {
 				var rof = creature.stats.get_rate_of_fire();
 				active_weapon.data.cooldown = active_weapon.data.base_cooldown / rof;

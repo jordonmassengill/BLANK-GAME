@@ -188,7 +188,7 @@
     {"id":{"name":"scr_game_constants","path":"scripts/scr_game_constants/scr_game_constants.yy",},},
     {"id":{"name":"scr_health_component","path":"scripts/scr_health_component/scr_health_component.yy",},},
     {"id":{"name":"scr_health_system","path":"scripts/scr_health_system/scr_health_system.yy",},},
-    {"id":{"name":"scr_inventory_system","path":"scripts/scr_inventory_system/scr_inventory_system.yy",},},
+    {"id":{"name":"scr_inventory_component","path":"scripts/scr_inventory_component/scr_inventory_component.yy",},},
     {"id":{"name":"scr_movement_component","path":"scripts/scr_movement_component/scr_movement_component.yy",},},
     {"id":{"name":"scr_player_properties","path":"scripts/scr_player_properties/scr_player_properties.yy",},},
     {"id":{"name":"scr_projectile_system","path":"scripts/scr_projectile_system/scr_projectile_system.yy",},},

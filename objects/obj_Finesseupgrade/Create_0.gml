@@ -1,18 +1,9 @@
-//Create Event for obj_Finesseupgrade (parent = obj_pickup_parent)
-finesseitem = {
-    name: "Finesse Orb",
-    color: make_colour_rgb(139, 69, 19),  // Brown color
-    type: "finesse",  
-    description: "Can be used to upgrade Crit Level"
-}
+// The new, simplified Create Event for obj_Lifeupgrade
+event_inherited(); // Inherits from obj_pickup_parent
 
+// This is all the logic we need now!
 function apply_effect(target) {
-    if (variable_instance_exists(target, "creature") && 
-        variable_struct_exists(target.creature, "inventory")) {
-        // Add the item to inventory
-        target.creature.inventory.add_item(finesseitem);
-        // Return true so the object knows to destroy itself
-        return true;
-    }
-    return false;
+    // Just tell the target's inventory to add a "life_orb"
+    // The inventory component itself knows what that means.
+    return target.entity.inventory.add_item("orb_finesse");
 }

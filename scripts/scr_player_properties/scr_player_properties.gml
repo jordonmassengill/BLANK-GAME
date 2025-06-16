@@ -8,7 +8,6 @@ function create_player_properties() {
 	props.input.using_controller = gamepad_is_connected(0);
 	props.crit_level = 1;
 	props.aoe_level = 3;
-	props.inventory = create_inventory();
 	
 	// Connect AOE level to stats system
 	props.stats.area_of_effect = props.aoe_level;

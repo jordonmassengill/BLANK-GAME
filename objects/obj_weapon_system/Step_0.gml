@@ -18,14 +18,17 @@ with(all) {
         
         var _input = creature.input;
         
-        // If fire is pressed, tell the component to fire its primary weapon.
-        if (_input.fire) {
-            entity.weapon.fire("primary");
-        }
-        
-        // If alt_fire is pressed, tell the component to fire its secondary weapon.
-        if (_input.alt_fire) {
-            entity.weapon.fire("secondary");
-        }
+        // --- This is the NEW code ---
+if (_input.fire) {
+    entity.weapon.fire(); // No arguments for the player
+}
+
+// The alt_fire logic in the weapon component doesn't exist yet,
+// so we'll comment this out for now to prevent future errors.
+/*
+if (_input.alt_fire) {
+    entity.weapon.fire(); 
+}
+*/
     }
 }
