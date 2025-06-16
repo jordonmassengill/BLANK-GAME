@@ -12,13 +12,15 @@ function add_component(entity, component_name, component) {
 	if (!variable_struct_exists(entity, "components")) {
 		entity.components = {};
 		
-		// Simple has_component check
-		entity.has_component = function(name) {
-			// ==========================================================
-			// THIS IS THE LINE THAT FIXES THE CRASH
-			return variable_struct_exists(self.components, name);
-			// ==========================================================
-		};
+		// This is the new, safe version
+entity.has_component = function(name) {
+    // First, safely check if the components struct exists at all.
+    if (!variable_struct_exists(self, "components")) {
+        return false;
+    }
+    // If it does, then check for the component key.
+    return variable_struct_exists(self.components, name);
+};
 	}
 	
 	// Store component in components struct

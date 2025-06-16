@@ -1,8 +1,11 @@
-// obj_stats_menu Draw GUI Event
-if (!stats_menu_active || !instance_exists(target_player)) exit;
+// This is the new, robust code
+if (!stats_menu_active) exit;
 
-// We can now safely assume 'target_player' is a valid, fully-initialized player instance.
-var player = target_player;
+// Actively find the player instance every frame, just like the shop does.
+var player = instance_find(obj_player_creature_parent, 0);
+
+// If no active player is found for any reason, do not continue.
+if (player == noone) exit;
 
 // Helper function to calculate level from current value
 calculate_stat_level = function(current_value, base_value, per_level_value) {
@@ -44,7 +47,7 @@ draw_set_font(-1);
 
 var start_x = gui_width * 0.15;
 var start_y = gui_height * 0.15;
-var line_height = 60;
+var line_height = 50;
 
 // Draw "STATS" title with neon effect
 var title_x = start_x;
@@ -282,71 +285,35 @@ var slot_size = 60;
 var slot_padding = 10;
 var slots_per_row = 8;
 
-// Draw inventory slots
+// +++ ADD THE NEW SUMMARY DRAWING LOGIC HERE +++
+// +++ The NEW, Simplified Inventory Drawing Logic +++
 if (variable_instance_exists(player, "entity") && player.entity.has_component("inventory")) {
-    var items = player.entity.inventory.items; // This part was already correct
-    var len = array_length(items);
+
+    // Get the clean summary from our function (this part is correct and stays)
+    var inventory_summary = player.entity.inventory.get_inventory_summary();
     
-    for(var i = 0; i < len; i++) {
-        var row = i div slots_per_row;
-        var col = i mod slots_per_row;
+    // Define a starting Y position below the "INVENTORY" title
+    var item_draw_y = inventory_y + 60;
+
+    // Set text alignment for our list
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    
+    // --- Loop through the summary and draw a simple text line for each item ---
+    for (var i = 0; i < array_length(inventory_summary); i++) {
+        var item_info = inventory_summary[i];
         
-        var slot_x = start_x + (col * (slot_size + slot_padding));
-        var slot_y = inventory_y + 50 + (row * (slot_size + slot_padding));
+        // Combine the name and count into one string
+        var item_text = item_info.name + ": " + string(item_info.count);
         
-        // Draw slot background
-        draw_set_color(make_color_rgb(0, 40, 40));
-        draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, false);
+        // Set the color based on the orb type
+        draw_set_color(item_info.color);
         
-        // Draw item if it exists
-        if (items[i] != undefined) {
-            // Draw the orb
-            draw_set_color(items[i].color);
-            draw_circle(
-                slot_x + slot_size/2,
-                slot_y + slot_size/2,
-                slot_size/3,
-                false
-            );
-            
-            // Draw count if more than 1
-            if (variable_struct_exists(items[i], "count") && items[i].count > 1) {
-                draw_set_color(c_white);
-                draw_set_halign(fa_right);
-                draw_set_valign(fa_top);
-                draw_text_transformed(
-                    slot_x + slot_size - 5,
-                    slot_y + 5,
-                    string(items[i].count),
-                    0.8,
-                    0.8,
-                    0
-                );
-                // Reset alignment
-                draw_set_halign(fa_left);
-                draw_set_valign(fa_top);
-            }
-        }
+        // Draw the text!
+        draw_text_transformed(start_x, item_draw_y, item_text, 1.5, 1.5, 0);
         
-        // Draw slot border with cyber effect
-        draw_set_color(make_color_rgb(0, 200, 200));
-        draw_rectangle(slot_x, slot_y, slot_x + slot_size, slot_y + slot_size, true);
-        
-        // Draw corner accents
-        var accent_size = 5;
-        draw_set_color(make_color_rgb(0, 255, 255));
-        // Top-left
-        draw_line(slot_x, slot_y, slot_x + accent_size, slot_y);
-        draw_line(slot_x, slot_y, slot_x, slot_y + accent_size);
-        // Top-right
-        draw_line(slot_x + slot_size - accent_size, slot_y, slot_x + slot_size, slot_y);
-        draw_line(slot_x + slot_size, slot_y, slot_x + slot_size, slot_y + accent_size);
-        // Bottom-left
-        draw_line(slot_x, slot_y + slot_size - accent_size, slot_x, slot_y + slot_size);
-        draw_line(slot_x, slot_y + slot_size, slot_x + accent_size, slot_y + slot_size);
-        // Bottom-right
-        draw_line(slot_x + slot_size - accent_size, slot_y + slot_size, slot_x + slot_size, slot_y + slot_size);
-        draw_line(slot_x + slot_size, slot_y + slot_size - accent_size, slot_x + slot_size, slot_y + slot_size);
+        // Move the Y position down for the next item in the list
+        item_draw_y += 40;
     }
 }
 
