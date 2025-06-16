@@ -257,6 +257,75 @@ for (var i = 0; i < array_length(stats_list); i++) {
     draw_rectangle(bar_x, y_pos, bar_x + bar_width, y_pos + bar_height, true);
 }
 
+
+// =================================================================
+// DRAW INVENTORY SECTION (v3 - Styled with Stacking)
+// =================================================================
+if (player != noone && variable_instance_exists(player, "entity") && variable_struct_exists(player.entity, "inventory")) {
+    
+    // --- Get Inventory Summary & Define Layout ---
+    // We now use get_inventory_summary() to get a clean, aggregated list of items.
+    var inventory_summary = player.entity.inventory.get_inventory_summary();
+    var inventory_y_start = start_y + (array_length(stats_list) * line_height) + 40; // 40px padding
+    
+    // Layout variables
+    var slot_size   = 40;
+    var slot_margin = 8;
+    var orb_radius  = 16;
+    
+    var slots_per_row = 12;
+    var initial_slot_x = start_x;
+    var slot_draw_x = initial_slot_x;
+    var slot_draw_y = inventory_y_start + 60; // Extra padding below the title
+    
+    // --- Draw Title ---
+    draw_set_color(c_white);
+    draw_set_halign(fa_left);
+    draw_text_transformed(start_x, inventory_y_start, "INVENTORY", 2, 2, 0);
+
+    // --- Loop Through the Summarized Inventory and Draw ---
+    for (var i = 0; i < array_length(inventory_summary); i++) {
+        var item = inventory_summary[i];
+        
+        // 1. Draw the white box for the slot
+        draw_set_color(c_white);
+        draw_rectangle(slot_draw_x, slot_draw_y, slot_draw_x + slot_size, slot_draw_y + slot_size, true); // Outline
+
+        // 2. Draw the orb in the center of the slot
+        draw_set_color(item.color);
+        var orb_center_x = slot_draw_x + (slot_size / 2);
+        var orb_center_y = slot_draw_y + (slot_size / 2);
+        draw_circle(orb_center_x, orb_center_y, orb_radius, false);
+        
+        // 3. Draw the stack count number if greater than 1
+        if (item.count > 1) {
+            draw_set_halign(fa_right);
+            draw_set_valign(fa_top);
+            draw_set_color(c_white);
+            
+            var text_x = slot_draw_x + slot_size - 2; // Position in top-right corner
+            var text_y = slot_draw_y + 2;
+            
+            // Draw a small black shadow for readability
+            draw_set_color(c_black);
+            draw_text(text_x + 1, text_y + 1, string(item.count));
+            
+            // Draw the white text on top
+            draw_set_color(c_white);
+            draw_text(text_x, text_y, string(item.count));
+        }
+
+        // 4. Move to the next slot position
+        slot_draw_x += slot_size + slot_margin;
+        
+        // 5. Check if we need to wrap to the next line
+        if (slot_draw_x >= initial_slot_x + (slots_per_row * (slot_size + slot_margin))) {
+            slot_draw_x = initial_slot_x;      // Reset X
+            slot_draw_y += slot_size + slot_margin; // Move Y down
+        }
+    }
+}
+
 // Reset drawing properties
 draw_set_alpha(1);
 draw_set_color(c_white);
