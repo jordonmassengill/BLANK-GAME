@@ -11,17 +11,20 @@ active_pulse = 0.5 + 0.5 * abs(sin(timer / 10));
 var player = instance_find(obj_player_creature_parent, 0);
 if (!player) exit;
 
-// Calculate total display count first (This logic is correct for how the UI is drawn)
+// ==================================================================
+// FIX 1: Correctly calculate the total number of displayed orbs by
+// summing the `count` of each stack, not just counting the stacks.
+// ==================================================================
 var total_display_count = 0;
 var items = player.entity.inventory.items;
 for (var i = 0; i < array_length(items); i++) {
-    if (items[i] != undefined && array_contains(valid_types, items[i].type)) {
-        // This part is for the old stacking system which is no longer in use.
-        // We can simplify this later, but for now it's not breaking anything.
-        var count = 1; // Assume count is 1 since we aren't stacking this way anymore
-        total_display_count += count;
+    var item = items[i];
+    if (item != undefined && array_contains(valid_types, item.type)) {
+        // Add the count of the stack to the total
+        total_display_count += item.count;
     }
 }
+
 
 // Input handling for panel switching
 if (player.creature.input.right && cursor_position == "inventory") {
@@ -38,6 +41,7 @@ if (player.creature.input.menu_up) {
     if (cursor_position == "inventory") {
         selected_item--;
         if (selected_item < 0) {
+            // Use the corrected total_display_count here
             selected_item = total_display_count - 1;
         }
     } else {
@@ -51,6 +55,7 @@ if (player.creature.input.menu_up) {
 if (player.creature.input.menu_down) {
     if (cursor_position == "inventory") {
         selected_item++;
+        // Use the corrected total_display_count here
         if (selected_item >= total_display_count) {
             selected_item = 0;
         }
@@ -75,39 +80,43 @@ if (player.creature.input.menu_select) {
             array_delete(selected_inventory_slots, array_index, 1);
         }
     } else {
+        // ==================================================================
+        // FIX 2: Correctly consume one orb at a time from a stack instead
+        // of removing the entire stack.
+        // ==================================================================
+        
         // Convert all selected orbs to the chosen type
-        var new_type = orb_types[selected_item];
-        var new_orbs_to_create = array_length(selected_inventory_slots);
+        var new_type_data = orb_types[selected_item];
+        var num_orbs_to_exchange = array_length(selected_inventory_slots);
         
-        // Sort selections in descending order to avoid index shifting
-        array_sort(selected_inventory_slots, function(a, b) { return b - a; });
-        
-        // First pass: Create array of inventory slots to remove
-        var slots_to_clear = array_create(new_orbs_to_create);
-        for (var i = 0; i < new_or_bs_to_create; i++) {
-            var display_index = selected_inventory_slots[i];
-            slots_to_clear[i] = ds_map_find_value(display_to_inventory_slot, display_index);
-        }
-        
-        // Sort removal slots in descending order
-        array_sort(slots_to_clear, function(a, b) { return b - a; });
-        
-        // Remove the orbs from inventory
-        for (var i = 0; i < array_length(slots_to_clear); i++) {
-            if (slots_to_clear[i] != undefined) {
-                player.entity.inventory.remove_item(slots_to_clear[i]);
+        // Do nothing if no orbs are selected to prevent errors
+        if (num_orbs_to_exchange > 0) {
+            // Step 1: Consume the selected orbs from the inventory ONE BY ONE.
+            for (var i = 0; i < num_orbs_to_exchange; i++) {
+                var display_index = selected_inventory_slots[i];
+                
+                // Find out which inventory slot this displayed orb belongs to
+                var slot_index = ds_map_find_value(display_to_inventory_slot, display_index);
+                
+                if (slot_index != undefined) {
+                    var item_to_consume = player.entity.inventory.items[slot_index];
+                    if (item_to_consume != undefined) {
+                        // Use the consume_item function, which correctly handles stacks
+                        player.entity.inventory.consume_item(item_to_consume.type);
+                    }
+                }
             }
+            
+            // Step 2: Add the new orbs to the inventory.
+            for (var i = 0; i < num_orbs_to_exchange; i++) {
+                // The inventory component handles creating the orb data.
+                player.entity.inventory.add_item("orb_" + new_type_data.type);
+            }
+            
+            // Step 3: Clear selections and reset the cursor.
+            selected_inventory_slots = [];
+            selected_item = 0; // Reset cursor to the top of the list
         }
-        
-        // Add new orbs
-        for (var i = 0; i < new_orbs_to_create; i++) {
-            // The inventory component handles creating the orb data.
-            // We just need to tell it which orb to add.
-            player.entity.inventory.add_item("orb_" + new_type.type);
-        }
-        
-        // Clear selections
-        selected_inventory_slots = [];
     }
 }
 
