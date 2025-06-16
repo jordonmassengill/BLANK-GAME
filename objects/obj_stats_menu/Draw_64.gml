@@ -9,8 +9,8 @@ if (player == noone) exit;
 
 // Helper function to calculate level from current value
 calculate_stat_level = function(current_value, base_value, per_level_value) {
-    if (current_value < base_value) return 1; // Always minimum level 1
-    return floor(((current_value - base_value) / per_level_value) + 1);
+    if (current_value < base_value) return 1; // Always minimum level 1
+    return floor(((current_value - base_value) / per_level_value) + 1);
 };
 
 var gui_width = display_get_gui_width();
@@ -25,17 +25,17 @@ draw_rectangle(0, 0, gui_width, gui_height, false);
 draw_set_alpha(0.1);
 draw_set_color(c_aqua);
 for(var i = 0; i < gui_width; i += 20) {
-    draw_line(i, 0, i, gui_height);
+    draw_line(i, 0, i, gui_height);
 }
 for(var i = 0; i < gui_height; i += 20) {
-    draw_line(0, i, gui_width, i);
+    draw_line(0, i, gui_width, i);
 }
 
 // Draw scanlines
 draw_set_alpha(0.1);
 for(var i = -10 + scanline_offset; i < gui_height; i += 10) {
-    draw_set_color(c_black);
-    draw_rectangle(0, i, gui_width, i + 5, false);
+    draw_set_color(c_black);
+    draw_rectangle(0, i, gui_width, i + 5, false);
 }
 
 draw_set_alpha(1);
@@ -143,9 +143,6 @@ for (var i = 0; i < array_length(stats_list); i++) {
     // In upgrade mode, check for available upgrades
     if (upgrade_mode) {
         var required_type = stat.upgradeable_by;
-        
-        // --- THIS IS THE FIX ---
-        // We now use our simple helper function instead of manually looping through the inventory.
         var available_points = player.entity.inventory.count_item(required_type);
 
         // If upgrades are available, use the appropriate color
@@ -260,63 +257,8 @@ for (var i = 0; i < array_length(stats_list); i++) {
     draw_rectangle(bar_x, y_pos, bar_x + bar_width, y_pos + bar_height, true);
 }
 
-// Draw inventory section
-var inventory_y = start_y + (array_length(stats_list) * line_height) + 50;
-
-// Draw "INVENTORY" title with neon effect
-var inventory_title_x = start_x;
-var inventory_title_y = inventory_y;
-
-// Outer glow for inventory title
-draw_set_color(make_color_rgb(0, 255, 255));
-draw_set_alpha(0.3);
-draw_text_transformed(inventory_title_x-2, inventory_title_y, "INVENTORY", 2, 2, 0);
-draw_text_transformed(inventory_title_x+2, inventory_title_y, "INVENTORY", 2, 2, 0);
-draw_text_transformed(inventory_title_x, inventory_title_y-2, "INVENTORY", 2, 2, 0);
-draw_text_transformed(inventory_title_x, inventory_title_y+2, "INVENTORY", 2, 2, 0);
-
-// Main inventory title
-draw_set_alpha(1);
-draw_set_color(make_color_rgb(0, 255, 255));
-draw_text_transformed(inventory_title_x, inventory_title_y, "INVENTORY", 2, 2, 0);
-
-// Calculate inventory slot dimensions
-var slot_size = 60;
-var slot_padding = 10;
-var slots_per_row = 8;
-
-// +++ ADD THE NEW SUMMARY DRAWING LOGIC HERE +++
-// +++ The NEW, Simplified Inventory Drawing Logic +++
-if (variable_instance_exists(player, "entity") && player.entity.has_component("inventory")) {
-
-    // Get the clean summary from our function (this part is correct and stays)
-    var inventory_summary = player.entity.inventory.get_inventory_summary();
-    
-    // Define a starting Y position below the "INVENTORY" title
-    var item_draw_y = inventory_y + 60;
-
-    // Set text alignment for our list
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-    
-    // --- Loop through the summary and draw a simple text line for each item ---
-    for (var i = 0; i < array_length(inventory_summary); i++) {
-        var item_info = inventory_summary[i];
-        
-        // Combine the name and count into one string
-        var item_text = item_info.name + ": " + string(item_info.count);
-        
-        // Set the color based on the orb type
-        draw_set_color(item_info.color);
-        
-        // Draw the text!
-        draw_text_transformed(start_x, item_draw_y, item_text, 1.5, 1.5, 0);
-        
-        // Move the Y position down for the next item in the list
-        item_draw_y += 40;
-    }
-}
-
 // Reset drawing properties
 draw_set_alpha(1);
 draw_set_color(c_white);
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
