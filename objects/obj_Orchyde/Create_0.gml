@@ -2,46 +2,43 @@
 event_inherited();
 creature = create_orchyde_properties();
 
-// Add health component
-add_component(entity, "health", create_health_component(400)); // Base health for Orchyde
+// --- NEW COMPONENT-BASED SETUP ---
+entity = {};
+entity.owner_instance = id;
 
-// Set health properties
-entity.health.max_health = 400; 
+// 1. Add Health Component
+add_component(entity, "health", create_health_component(400));
+entity.health.max_health = 400;
 entity.health.current_health = 400;
 
-// Weapon Component to Orchyde ---
+// 2. Add Weapon Component (Now holds both melee and ranged potential)
 var weapon_comp = create_weapon_component(entity);
-// Use pickup_weapon instead of add_weapon
-var weapon_data = { base_cooldown: 120, pickup_obj_index: undefined };
-weapon_comp.pickup_weapon("shotgun", weapon_data); 
+var weapon_data = { base_cooldown: 120, pickup_obj_index: undefined }; // Cooldown for shotgun
+weapon_comp.pickup_weapon("shotgun", weapon_data);
 add_component(entity, "weapon", weapon_comp);
 
-// Movement and patrol properties
-patrol_point_left = x - 100;    
-patrol_point_right = x + 100;   
-is_patrolling = true;           
-moving_right = true;
-edge_check_dist = 32;
-walk_speed = 1;  // Added this
+// 3. Add Movement Component
+// The movement component will read from an "input" struct, just like the player.
+// The AI component will write to this struct.
+creature.input = { left: false, right: false, jump: false, fire: false }; // Give it a blank input struct
+add_component(entity, "movement", create_movement_component(entity, creature.stats));
 
-// Combat properties
-melee_cooldown = 0;
-melee_cooldown_max = 60;
-melee_range = 56;
-melee_damage = 10;
-hit_timer = 0;
-hit_timer_max = 15;
-is_melee_attacking = false;
-is_shooting = false;
+// 4. Add the NEW AI Component
+var ai_config = {
+    detection_range: 250,
+    lose_target_range: 500,
+    melee_range: 56,
+    patrol_speed_mult: 0.5,
+    attack_anim_time: 20
+};
+add_component(entity, "ai", create_ai_component(entity, ai_config));
+// --- END NEW SETUP ---
 
-// Add hit function
+// The hit function can be simplified or handled by a future "status" component
 hit = function() {
     if (hit_timer <= 0) {
         hit_timer = hit_timer_max;
         sprite_index = sOrchydeHit;
         image_index = 0;
-        image_speed = 1;
-        creature.input.left = false;
-        creature.input.right = false;
     }
 }

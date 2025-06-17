@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_ai_component",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ai_component",
+  "parent":{
+    "name":"scr_components",
+    "path":"folders/Scripts/scr_components.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

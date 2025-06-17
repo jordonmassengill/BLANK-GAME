@@ -133,6 +133,13 @@ function create_movement_component(owner_entity, owner_stats) {
 			}
 			return self;
 		},
+		
+		set_input_xy: function(x_val, y_val) {
+			self.input.left = (x_val < 0);
+			self.input.right = (x_val > 0);
+			// self.input.jump could be set here in the future for flying/jumping AI
+			return self;
+		},
 
 		update: function() {
 			var inst = self.owner.owner_instance;

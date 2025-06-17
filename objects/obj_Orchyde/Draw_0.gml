@@ -1,31 +1,41 @@
 // Draw Event of obj_Orchyde
-var original_xscale = image_xscale;
-image_xscale = (creature.facing_direction == "right" ? 1 : -1) * abs(image_xscale);
 
-// Update animation state based on current state
+// Set facing direction based on the creature's properties
+image_xscale = (creature.facing_direction == "right" ? 1 : -1);
+
+// This variable will hold the sprite we WANT to be showing
+var _new_sprite = sprite_index;
+
+// Determine the correct sprite based on the AI's current state
 if (hit_timer > 0) {
-    sprite_index = sOrchydeHit;
-    image_speed = 1;
-} else if (is_melee_attacking) {
-    sprite_index = sOrchydeMelee;
-    image_speed = 1;
-} else if (is_shooting) {
-    sprite_index = sOrchydeShoot;
-    image_speed = 1;
-} else if ((creature.input.left || creature.input.right) && !is_melee_attacking && !is_shooting) {
-    sprite_index = sOrchydeRun;
-    image_speed = 1;
+	_new_sprite = sOrchydeHit;
+} else if (entity.ai.state_machine.is_in_state("MELEE_ATTACK")) {
+	_new_sprite = sOrchydeMelee;
+} else if (entity.ai.state_machine.is_in_state("RANGED_ATTACK")) {
+	_new_sprite = sOrchydeShoot;
 } else {
-    sprite_index = sOrchydeIdle;
-    image_speed = 1;
+	// FINAL, SIMPLIFIED LOGIC FOR IDLE/RUN
+	// This covers both CHASE and PATROL.
+	// In either state, if the enemy is actually moving, show the run animation.
+	// If it's not moving (e.g., stopped at a ledge), show the idle animation.
+	if (abs(creature.xsp) > 0) {
+		_new_sprite = sOrchydeRun;
+	} else {
+		_new_sprite = sOrchydeIdle;
+	}
 }
 
+// Only change the sprite_index if the new sprite is different from the current one.
+// This prevents the animation from resetting every frame.
+if (sprite_index != _new_sprite) {
+	sprite_index = _new_sprite;
+	image_index = 0; // Reset the animation to the beginning when changing sprites
+}
+
+// Draw the object with its new sprite
 draw_self();
 
-// Draw health bar
-if (variable_instance_exists(id, "entity") && 
-    variable_struct_exists(entity, "health")) {
-    entity.health.draw_health_bar();
+// Draw health bar (unchanged)
+if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
+	entity.health.draw_health_bar();
 }
-
-image_xscale = original_xscale;
