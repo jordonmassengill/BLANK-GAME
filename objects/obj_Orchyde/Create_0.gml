@@ -2,10 +2,6 @@
 event_inherited();
 creature = create_orchyde_properties();
 
-// --- NEW COMPONENT-BASED SETUP ---
-entity = {};
-entity.owner_instance = id;
-
 // 1. Add Health Component
 add_component(entity, "health", create_health_component(400));
 entity.health.max_health = 400;

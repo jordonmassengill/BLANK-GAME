@@ -44,20 +44,30 @@ function create_movement_component(owner_entity, owner_stats) {
 			// --- STATE DEFINITIONS ---
 
 			self.state_machine.add_state("IDLE",
-				function() { self.xsp = 0; },
-				function() { if (self.input.left || self.input.right) self.state_machine.change_state("MOVE"); }
-			);
+    function() { self.xsp = 0; }, // on enter
+    function() { // on update
+        self.xsp = 0; // FORCE speed to 0 every frame while idle.
+        if (self.input.left || self.input.right) self.state_machine.change_state("MOVE");
+    }
+);
 			
 			self.state_machine.add_state("MOVE",
-				function() { },
-				function() {
-					var move = 0;
-					if (self.input.right) move = self.stats.get_move_speed();
-					if (self.input.left) move = -self.stats.get_move_speed();
-					self.xsp = move;
-					if (!self.input.left && !self.input.right) self.state_machine.change_state("IDLE");
-				}
-			);
+    function() { // on enter
+        var move = 0;
+        if (self.input.right) move = self.stats.get_move_speed();
+        if (self.input.left) move = -self.stats.get_move_speed();
+        self.xsp = move;
+    },
+    function() { // on update
+        var move = 0;
+        if (self.input.right) move = self.stats.get_move_speed();
+        if (self.input.left) move = -self.stats.get_move_speed();
+        self.xsp = move;
+
+        // --- ADD THIS LINE ---
+        if (move == 0) self.state_machine.change_state("IDLE");
+    }
+);
 			
 			self.state_machine.add_state("JUMP_SQUAT",
 				function() {
@@ -141,47 +151,76 @@ function create_movement_component(owner_entity, owner_stats) {
 			return self;
 		},
 
-		update: function() {
-			var inst = self.owner.owner_instance;
-			
-			// --- FIX: Manage jump_released flag internally ---
-			if (!self.input.jump) {
-				self.jump_released = true;
-			}
-			
-			with (inst) {
-				other.was_grounded = other.is_grounded;
-				other.is_grounded = place_meeting(x, y + 1, obj_floor);
-			}
-			
-			if (self.is_grounded && !self.was_grounded) { 
-				if (self.state_machine.is_in_state("FALL") || self.state_machine.is_in_state("KNOCKBACK")) {
-					self.ysp = 0;
-					if (self.input.jump && self.jump_released) {
-						self.jump_released = false;
-						self.state_machine.change_state("JUMP_SQUAT"); 
-					} else if (self.input.left || self.input.right) {
-						self.state_machine.change_state("MOVE");
-					} else {
-						self.state_machine.change_state("IDLE"); 
-					}
-				}
-			} else if (!self.is_grounded && self.was_grounded) {
-				if (self.state_machine.is_in_state("IDLE") || self.state_machine.is_in_state("MOVE")) {
-					self.state_machine.change_state("FALL");
-				}
-			}
-			
-			if (self.input.jump && self.is_grounded && (self.state_machine.is_in_state("IDLE") || self.state_machine.is_in_state("MOVE"))) {
-				if (self.jump_released) {
-					self.jump_released = false;
-					self.state_machine.change_state("JUMP_SQUAT");
-				}
-			}
-			
-			self.state_machine.update();
-			return self;
-		},
+		// In scr_movement_component.gml, replace the entire update function
+
+update: function() {
+    var inst = self.owner.owner_instance;
+    
+    // --- Grounded State & Jump Logic ---
+    if (!self.input.jump) {
+        self.jump_released = true;
+    }
+    with (inst) {
+        other.was_grounded = other.is_grounded;
+        other.is_grounded = place_meeting(x, y + 1, obj_floor);
+    }
+    if (self.is_grounded && !self.was_grounded) { 
+        if (self.state_machine.is_in_state("FALL") || self.state_machine.is_in_state("KNOCKBACK")) {
+            self.ysp = 0;
+            if (self.input.jump && self.jump_released) {
+                self.jump_released = false;
+                self.state_machine.change_state("JUMP_SQUAT"); 
+            } else if (self.input.left || self.input.right) {
+                self.state_machine.change_state("MOVE");
+            } else {
+                self.state_machine.change_state("IDLE"); 
+            }
+        }
+    } else if (!self.is_grounded && self.was_grounded) {
+        if (!self.owner.has_component("ai")) { // AI should not auto-fall
+            if (self.state_machine.is_in_state("IDLE") || self.state_machine.is_in_state("MOVE")) {
+                self.state_machine.change_state("FALL");
+            }
+        }
+    }
+    if (self.input.jump && self.is_grounded && (self.state_machine.is_in_state("IDLE") || self.state_machine.is_in_state("MOVE"))) {
+        if (self.jump_released) {
+            self.jump_released = false;
+            self.state_machine.change_state("JUMP_SQUAT");
+        }
+    }
+    
+    // --- Update State Machine ---
+    // This runs the logic for the current state (e.g., MOVE) and calculates a "desired" xsp and ysp
+    self.state_machine.update(); 
+    
+    // --- CORRECTED COLLISION LOGIC ---
+    // We use with(inst) to switch the scope to the instance before calling place_meeting
+    with (inst) {
+        // Horizontal Collision
+        // 'other' refers to the movement component struct
+        if (place_meeting(x + other.xsp, y, obj_floor)) {
+            while(!place_meeting(x + sign(other.xsp), y, obj_floor)) {
+                x += sign(other.xsp);
+            }
+            other.xsp = 0; // Set the component's internal speed to 0
+        }
+
+        // Vertical Collision
+        if (place_meeting(x, y + other.ysp, obj_floor)) {
+            while(!place_meeting(x, y + sign(other.ysp), obj_floor)) {
+                y += sign(other.ysp);
+            }
+            other.ysp = 0; // Set the component's internal speed to 0
+        }
+    }
+    
+    // The 'creature' struct on the main instance now gets the FINAL, collision-adjusted speeds.
+    inst.creature.xsp = self.xsp;
+    inst.creature.ysp = self.ysp;
+
+    return self;
+},
 		
 		apply_knockback: function(h_force, v_force) {
 			self.xsp = h_force;

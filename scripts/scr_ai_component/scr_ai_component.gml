@@ -1,5 +1,5 @@
 /// @function create_ai_component(owner_entity, config)
-/// @description Creates a state-driven AI component for an entity. (v3 - Simplified Logic)
+/// @description Creates a state-driven AI component for an entity.
 function create_ai_component(owner_entity, config) {
 	
 	var component = {
@@ -36,7 +36,7 @@ function create_ai_component(owner_entity, config) {
 	var sm = component.state_machine;
 	sm.init(component);
 
-	// STATE: PATROL - Unchanged, this part is working correctly.
+	// STATE: PATROL
 	sm.add_state("PATROL",
 		method(component, function() {
 			self.target = noone;
@@ -62,7 +62,7 @@ function create_ai_component(owner_entity, config) {
 		})
 	);
 
-	// STATE: CHASE - Rewritten to be smarter and not need a separate "guard" state.
+	// STATE: CHASE (with bug fix)
 	sm.add_state("CHASE",
 		method(component, function() { /* On Enter - does nothing */ }),
 		method(component, function() { // On Update
@@ -71,45 +71,59 @@ function create_ai_component(owner_entity, config) {
 				point_distance(self.owner.owner_instance.x, 0, self.target.x, 0) > self.config.lose_target_range) {
 				self.target = noone;
 				self.state_machine.change_state("PATROL");
-				return;
+				return; // Exit early
 			}
 			
-			// 2. Check if we are close enough to melee.
+			// --- ATTACK LOGIC ---
+			// First, decide if an attack should happen. This takes priority over movement.
 			var dist = point_distance(self.owner.owner_instance.x, 0, self.target.x, 0);
+
+			// If in melee range, always prefer melee.
 			if (dist <= self.config.melee_range) {
 				self.state_machine.change_state("MELEE_ATTACK");
-				return;
+				return; // Attack and skip movement logic for this frame
 			}
 			
-			// 3. Check for a ledge in the direction of the target.
-			var move_dir = sign(self.target.x - self.owner.owner_instance.x);
-			var has_floor_ahead = false;
-			with(self.owner.owner_instance) {
-				var check_x = (move_dir == 1) ? bbox_right + 2 : bbox_left - 2;
-				if (position_meeting(check_x, bbox_bottom + 1, obj_floor)) {
-					has_floor_ahead = true;
-				}
+			// If not in melee range, check for ranged attack.
+			if (self.owner.weapon.can_fire()) {
+				self.state_machine.change_state("RANGED_ATTACK");
+				return; // Attack and skip movement logic for this frame
 			}
 
-			// 4. Decide what to do based on the ledge check and weapon cooldown.
-			if (!has_floor_ahead) {
-				// There's a cliff! Stop moving.
-				self.owner.movement.set_input_xy(0, 0);
-				// We are STILL in the CHASE state. Now check if we can shoot from here.
-				if (self.owner.weapon.can_fire()) {
-					self.state_machine.change_state("RANGED_ATTACK");
-				}
-			} else if (self.owner.weapon.can_fire()) {
-				// Path is clear AND we can shoot.
-				self.state_machine.change_state("RANGED_ATTACK");
-			} else {
-				// Path is clear but weapon is on cooldown, so keep moving.
-				self.owner.movement.set_input_xy(move_dir, 0);
-			}
+			// --- MOVEMENT LOGIC (Stable & Accurate Ledge Check) ---
+var should_move = true;
+var inst = self.owner.owner_instance;
+var move_dir = sign(self.target.x - inst.x);
+
+// This is the stable ledge check. It's accurate regardless of sprite origin.
+// It uses the idle sprite as a stable reference for width and bounding box.
+var stable_sprite_for_check = sOrchydeIdle;
+var sprite_x_offset = sprite_get_xoffset(stable_sprite_for_check);
+var bbox_left_relative = sprite_get_bbox_left(stable_sprite_for_check) - sprite_x_offset;
+var bbox_right_relative = sprite_get_bbox_right(stable_sprite_for_check) - sprite_x_offset;
+
+var check_x = inst.x;
+if (move_dir == 1) {
+    check_x += bbox_right_relative + 2; // Check 2px past the right edge
+} else {
+    check_x += bbox_left_relative - 2; // Check 2px past the left edge
+}
+
+if (!position_meeting(check_x, inst.bbox_bottom + 1, obj_floor)) {
+    should_move = false; // Ledge detected!
+}
+
+// Set input based on the stable and accurate decision
+if (should_move) {
+    self.owner.movement.set_input_xy(move_dir, 0);
+} else {
+    self.owner.movement.set_input_xy(0, 0);
+}
+
 		})
 	);
 	
-	// ATTACK STATES - Now always return to CHASE.
+	// ATTACK STATES
 	sm.add_state("MELEE_ATTACK",
 		method(component, function() {
 			self.attack_timer = self.config.attack_anim_time;
