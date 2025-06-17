@@ -2,36 +2,46 @@
 event_inherited();
 creature = create_orchyde_properties();
 
-// 1. Add Health Component
+// 1. Add Health Component and initialize its values
 add_component(entity, "health", create_health_component(400));
 entity.health.max_health = 400;
 entity.health.current_health = 400;
 
-// 2. Add Weapon Component (Now holds both melee and ranged potential)
+// 2. Define the death callback function
+var death_function = method(id, function() {
+    var player = instance_find(obj_player_creature_parent, 0);
+    if (player != noone) {
+        player.creature.currency += creature.currency_value;
+    }
+    event_perform(ev_destroy, 0);
+    instance_destroy();
+});
+
+// 3. Set the callback on the now-existing health component
+entity.health.set_death_callback(death_function);
+
+// 4. Add Weapon Component
 var weapon_comp = create_weapon_component(entity);
 var weapon_data = { base_cooldown: 120, pickup_obj_index: undefined }; // Cooldown for shotgun
 weapon_comp.pickup_weapon("shotgun", weapon_data);
 add_component(entity, "weapon", weapon_comp);
 
-// 3. Add Movement Component
-// The movement component will read from an "input" struct, just like the player.
-// The AI component will write to this struct.
-creature.input = { left: false, right: false, jump: false, fire: false }; // Give it a blank input struct
+// 5. Add Movement Component
+creature.input = { left: false, right: false, jump: false, fire: false };
 add_component(entity, "movement", create_movement_component(entity, creature.stats));
 
-// 4. Add the NEW AI Component
+// 6. Add the AI Component
 var ai_config = {
     detection_range: 250,
     lose_target_range: 500,
     melee_range: 56,
     patrol_speed_mult: 0.5,
     attack_anim_time: 20,
-    melee_cooldown_max: 90 // <--- ADD THIS LINE
+    melee_cooldown_max: 90
 };
 add_component(entity, "ai", create_ai_component(entity, ai_config));
-// --- END NEW SETUP ---
 
-// The hit function can be simplified or handled by a future "status" component
+// 7. Define the hit function (for visual feedback)
 hit = function() {
     if (hit_timer <= 0) {
         hit_timer = hit_timer_max;

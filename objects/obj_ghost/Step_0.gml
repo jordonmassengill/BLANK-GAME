@@ -1,16 +1,16 @@
-// obj_ghost Step Event
-event_inherited();
-entity.weapon.update(); // --- ADD THIS LINE AT THE TOP ---
+// obj_ghost Step Event - REFACTORED
+event_inherited(); // Handles parent logic like status effects
 
-// If ghost has a valid target within range
-if (closest_target != noone && closest_distance <= creature.detection_range) {
-    // Calculate direction to target for shooting
-    var direction_to_target = point_direction(x, y, closest_target.x, closest_target.y);
-    
-    // Replace the old check with a direct call to the component's fire method
-    // The component itself will check the cooldown.
-    entity.weapon.fire(closest_target);
-    is_shooting = true;
-    sprite_index = sGhost;
-    image_index = 0;
+// Update all components. The magic happens inside them!
+entity.ai.update();
+entity.movement.update();
+entity.weapon.update();
+
+// Update facing direction based on the AI's target
+if (entity.ai.target != noone) {
+    creature.facing_direction = (entity.ai.target.x > x) ? "right" : "left";
 }
+
+// The movement component handles gravity, but we ensure speed is otherwise zero
+creature.xsp = entity.movement.xsp;
+creature.ysp = entity.movement.ysp;

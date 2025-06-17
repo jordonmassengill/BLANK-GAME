@@ -1,4 +1,9 @@
 // obj_Martin Draw Event
+// Set facing direction based on the creature's properties
+if (variable_instance_exists(id, "creature")) {
+    image_xscale = (creature.facing_direction == "right" ? 1 : -1);
+}
+
 draw_self();
 
 // Draw health bar using component system
