@@ -25,7 +25,8 @@ var ai_config = {
     lose_target_range: 500,
     melee_range: 56,
     patrol_speed_mult: 0.5,
-    attack_anim_time: 20
+    attack_anim_time: 20,
+    melee_cooldown_max: 90 // <--- ADD THIS LINE
 };
 add_component(entity, "ai", create_ai_component(entity, ai_config));
 // --- END NEW SETUP ---
