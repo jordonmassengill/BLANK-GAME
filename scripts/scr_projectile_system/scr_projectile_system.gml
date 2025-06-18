@@ -77,6 +77,11 @@ on_hit: function(target) {
     var actual_damage = target.entity.health.take_damage(final_damage);
     
     // Call hit function if it exists
+    if (target.entity.health.is_dead) {
+        return true; // Hit was successful, but target is dead.
+    }
+
+    // Call hit function if it exists
     if (variable_instance_exists(target, "hit")) {
         target.hit(final_damage);
     }

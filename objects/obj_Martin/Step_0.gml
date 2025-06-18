@@ -1,5 +1,8 @@
 // obj_Martin Step Event - REFACTORED
 event_inherited();
+if (!instance_exists(id)) {
+    exit;
+}
 
 // If the shop is open, we stop all other logic.
 if (shop_menu[? "active"]) {
