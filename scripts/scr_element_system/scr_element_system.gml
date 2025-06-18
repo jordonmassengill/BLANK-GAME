@@ -92,67 +92,83 @@ function apply_element_properties(proj_props, element_type) {
     return proj_props;
 }
 
-// Apply status effects to a target
+// In scr_element_system, this function is being replaced entirely.
+// Apply Status function
 function apply_status_effects(target, proj_props, attacker) {
     if (!variable_instance_exists(target, "creature")) return;
-    
-    // Get elemental power multiplier from attacker
+
+    // This logic is the same: calculate power and resistance based on stats.
     var elemental_power = 1.0;
     if (variable_instance_exists(attacker, "creature")) {
         elemental_power = attacker.creature.stats.get_elemental_power();
     }
-    
-    // Get resistance multiplier from target
-    var resistance_multiplier = 1.0;
-    if (variable_instance_exists(target, "creature")) {
-        resistance_multiplier = 1.0 - (target.creature.stats.get_resistance() / 100);
+    var resistance_multiplier = 1.0 - (target.creature.stats.get_resistance() / 100);
+
+    // =========================================================================
+    // NEW LOGIC: Check if the target has our new component
+    // =========================================================================
+    if (variable_instance_exists(target, "entity") && target.entity.has_component("status")) {
+        var status_comp = target.entity.status;
+
+        // Apply DOT effects
+        if (proj_props[$ "dot_damage"] > 0) {
+            var final_dot = proj_props[$ "dot_damage"] * elemental_power * resistance_multiplier;
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier;
+            status_comp.add_effect(STATUS_TYPE.DOT, final_dot, final_duration, proj_props[$ "dot_tick_rate"]);
+        }
+
+        // Apply movement slow
+        if (proj_props[$ "movement_slow"] > 0) {
+            var final_slow = min(0.9, proj_props[$ "movement_slow"] * elemental_power * resistance_multiplier);
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier; // Duration is shared
+            status_comp.add_effect(STATUS_TYPE.MOVEMENT_SLOW, final_slow, final_duration);
+        }
+
+        // Apply attack speed slow
+        if (proj_props[$ "fire_rate_slow"] > 0) {
+            var final_slow = min(0.9, proj_props[$ "fire_rate_slow"] * elemental_power * resistance_multiplier);
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier; // Duration is shared
+            status_comp.add_effect(STATUS_TYPE.ATTACK_SLOW, final_slow, final_duration);
+        }
+
+        // Apply stun
+        if (proj_props[$ "stun_duration"] > 0) {
+            var final_duration = proj_props[$ "stun_duration"] * resistance_multiplier;
+            status_comp.add_effect(STATUS_TYPE.STUN, 1.0, final_duration);
+        }
     }
-    
-    // Add status effects if they don't exist
-    if (!variable_instance_exists(target.creature, "status_manager")) {
-        target.creature.status_manager = create_status_manager();
-    }
-    
-    // Apply DOT effects with elemental power and resistance
-    if (proj_props[$ "dot_damage"] > 0) {
-        var final_dot = proj_props[$ "dot_damage"] * elemental_power * resistance_multiplier;
-        var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier;
-        target.creature.status_manager.add_effect(
-            STATUS_TYPE.DOT,
-            final_dot,
-            final_duration,
-            proj_props[$ "dot_tick_rate"]
-        );
-    }
-    
-    // Apply movement slow with elemental power and resistance
-    if (proj_props[$ "movement_slow"] > 0) {
-        var final_slow = min(0.9, proj_props[$ "movement_slow"] * elemental_power * resistance_multiplier);
-        target.creature.status_manager.add_effect(
-            STATUS_TYPE.MOVEMENT_SLOW,
-            final_slow,
-            proj_props[$ "dot_duration"]
-        );
-    }
-    
-    // Apply attack speed slow with elemental power and resistance
-    if (proj_props[$ "fire_rate_slow"] > 0) {
-        var final_slow = min(0.9, proj_props[$ "fire_rate_slow"] * elemental_power * resistance_multiplier);
-        target.creature.status_manager.add_effect(
-            STATUS_TYPE.ATTACK_SLOW,
-            final_slow,
-            proj_props[$ "dot_duration"]
-        );
-    }
-    
-    // Apply stun with elemental power and resistance
-    if (proj_props[$ "stun_duration"] > 0) {
-        var final_duration = proj_props[$ "stun_duration"] * resistance_multiplier;
-        target.creature.status_manager.add_effect(
-            STATUS_TYPE.STUN,
-            1.0,  // Stun is binary - either stunned or not
-            final_duration
-        );
+    // =========================================================================
+    // OLD FALLBACK: If no component, use the old manager
+    // =========================================================================
+    else {
+        // This is your original code, which will now only run on non-migrated creatures (like enemies).
+        if (!variable_instance_exists(target.creature, "status_manager")) {
+            target.creature.status_manager = create_status_manager();
+        }
+        var status_manager = target.creature.status_manager; // Shortcut
+
+        if (proj_props[$ "dot_damage"] > 0) {
+            var final_dot = proj_props[$ "dot_damage"] * elemental_power * resistance_multiplier;
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier;
+            status_manager.add_effect(STATUS_TYPE.DOT, final_dot, final_duration, proj_props[$ "dot_tick_rate"]);
+        }
+
+        if (proj_props[$ "movement_slow"] > 0) {
+            var final_slow = min(0.9, proj_props[$ "movement_slow"] * elemental_power * resistance_multiplier);
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier;
+            status_manager.add_effect(STATUS_TYPE.MOVEMENT_SLOW, final_slow, final_duration);
+        }
+
+        if (proj_props[$ "fire_rate_slow"] > 0) {
+            var final_slow = min(0.9, proj_props[$ "fire_rate_slow"] * elemental_power * resistance_multiplier);
+            var final_duration = proj_props[$ "dot_duration"] * resistance_multiplier;
+            status_manager.add_effect(STATUS_TYPE.ATTACK_SLOW, final_slow, final_duration);
+        }
+
+        if (proj_props[$ "stun_duration"] > 0) {
+            var final_duration = proj_props[$ "stun_duration"] * resistance_multiplier;
+            status_manager.add_effect(STATUS_TYPE.STUN, 1.0, final_duration);
+        }
     }
 }
 function calculate_elemental_multiplier(target, element_type, attacker) {

@@ -3,7 +3,6 @@ event_inherited();
 creature = create_ghost_properties();
 
 // --- Component Setup ---
-entity = {};
 entity.owner_instance = id;
 
 // Health Component

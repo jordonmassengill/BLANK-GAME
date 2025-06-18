@@ -6,7 +6,6 @@ creature = create_player_properties();
 is_main_player = true;
 
 // Set up entity with components
-entity = {};
 entity.owner_instance = id;
 
 // --- COMPONENT SETUP ---
@@ -32,6 +31,7 @@ add_component(entity, "movement", create_movement_component(entity, creature.sta
 var weapon_comp = create_weapon_component(entity);
 add_component(entity, "weapon", weapon_comp);
 add_component(entity, "inventory", create_inventory_component(16));
+add_component(entity, "status", create_status_component(entity));
 // --- END COMPONENT SETUP ---
 
 
