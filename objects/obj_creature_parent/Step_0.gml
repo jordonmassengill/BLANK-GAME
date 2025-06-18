@@ -2,6 +2,10 @@
 if (variable_instance_exists(id, "creature")) {
     // Update all active effects
     creature.status_manager.update_effects(id);
+	
+	    if (!instance_exists(id)) {
+        exit;
+    }
     
     // Apply movement speed effects if slowed
     var move_slow = creature.status_manager.get_effect_magnitude(STATUS_TYPE.MOVEMENT_SLOW);

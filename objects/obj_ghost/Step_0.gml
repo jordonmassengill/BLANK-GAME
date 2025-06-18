@@ -1,6 +1,10 @@
 // obj_ghost Step Event - REFACTORED
 event_inherited(); // Handles parent logic like status effects
 
+if (!instance_exists(id)) {
+    exit;
+}
+
 // Update all components. The magic happens inside them!
 entity.ai.update();
 entity.movement.update();
