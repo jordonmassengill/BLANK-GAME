@@ -9,11 +9,11 @@ entity.health.current_health = 400;
 
 // 2. Define the death callback function
 var death_function = method(id, function() {
-    var player = instance_find(obj_player_creature_parent, 0);
-    if (player != noone) {
-        player.creature.currency += creature.currency_value;
-    }
-    instance_destroy(); 
+    var player = instance_find(obj_player_creature_parent, 0);
+    if (player != noone) {
+        player.creature.currency += creature.currency_value;
+    }
+    instance_destroy();
 });
 
 // 3. Set the callback on the now-existing health component
@@ -37,12 +37,15 @@ var ai_config = {
     patrol_speed_mult: 0.5,
     attack_anim_time: 20,
     melee_cooldown_max: 90,
-	body_width_left: 28,  // Approximate pixels from origin to logical left edge
+    body_width_left: 28,  // Approximate pixels from origin to logical left edge
     body_width_right: 28,
 };
 add_component(entity, "ai", create_ai_component(entity, ai_config));
 
-// 7. Define the hit function (for visual feedback)
+// 7. Add the Status Component
+add_component(entity, "status", create_status_component(entity));
+
+// 8. Define the hit function (for visual feedback)
 hit = function() {
     if (hit_timer <= 0) {
         hit_timer = hit_timer_max;
@@ -50,3 +53,4 @@ hit = function() {
         image_index = 0;
     }
 }
+is_ready = true;

@@ -46,7 +46,6 @@ function create_inventory_component(max_slots = 16) {
                 }
             }
 
-            show_debug_message("Inventory is full! Cannot add " + item_struct.name);
             return false; // No empty slots found
         },
 		
@@ -91,7 +90,6 @@ function create_inventory_component(max_slots = 16) {
 					return true;
 			}
 			
-			show_debug_message("Warning: Unrecognized item_id '" + item_id + "' in inventory component.");
 			return false;
 		},
 		

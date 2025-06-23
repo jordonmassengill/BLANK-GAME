@@ -57,3 +57,4 @@ hit = function(damage_amount = 0) {
 	}
 	return true;
 }
+is_ready = true;

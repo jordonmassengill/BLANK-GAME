@@ -42,7 +42,6 @@ function create_status_component(owner_entity) {
 		/// @function update()
 		/// @description The main logic loop, called every frame from the owner's Step event.
 		update: function() {
-			    show_debug_message("---> INSIDE update(). Active effects: " + string(ds_list_size(self.active_effects)));
 
 	    // First, check if the owner instance still exists. This is a safety measure.
 	    if (!instance_exists(self.owner.owner_instance)) {
