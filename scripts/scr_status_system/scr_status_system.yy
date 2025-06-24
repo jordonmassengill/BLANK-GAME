@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_status_system",
   "parent":{
-    "name":"scr_damage",
-    "path":"folders/Scripts/scr_damage.yy",
+    "name":"scr_systems",
+    "path":"folders/Scripts/scr_systems.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
