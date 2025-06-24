@@ -38,9 +38,7 @@ var ai_config = {
     melee_range: 0,           // <-- Add this
     patrol_speed_mult: 0.4,
     attack_anim_time: 0,      // <-- Add this
-    melee_cooldown_max: 0,     // <-- Add this
-	body_width_left: 16,
-    body_width_right: 16
+    melee_cooldown_max: 0     // <-- Add this
 };
 add_component(entity, "ai", create_ai_component(entity, ai_config));
 

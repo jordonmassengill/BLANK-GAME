@@ -32,14 +32,12 @@ add_component(entity, "movement", create_movement_component(entity, creature.sta
 
 // 6. Add the AI Component
 var ai_config = {
-    detection_range: 200,
-    lose_target_range: 250,
-    melee_range: 45,
+    detection_range: 250,
+    lose_target_range: 500,
+    melee_range: 56,
     patrol_speed_mult: 0.5,
     attack_anim_time: 20,
-    melee_cooldown_max: 90,
-	body_width_left: 28,  // Approximate pixels from origin to logical left edge
-    body_width_right: 28,
+    melee_cooldown_max: 90
 };
 add_component(entity, "ai", create_ai_component(entity, ai_config));
 
