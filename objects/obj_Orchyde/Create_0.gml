@@ -9,11 +9,12 @@ entity.health.current_health = 400;
 
 // 2. Define the death callback function
 var death_function = method(id, function() {
-    var player = instance_find(obj_player_creature_parent, 0);
-    if (player != noone) {
-        player.creature.currency += creature.currency_value;
-    }
-    instance_destroy(); 
+    var player = instance_find(obj_player_creature_parent, 0);
+    if (player != noone) {
+        player.creature.currency += creature.currency_value;
+    }
+    event_perform(ev_destroy, 0);
+    instance_destroy();
 });
 
 // 3. Set the callback on the now-existing health component

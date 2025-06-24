@@ -56,9 +56,6 @@ function create_status_manager() {
                                 variable_struct_exists(target.entity, "health")) {
                                 
                                 target.entity.health.take_damage(effect.magnitude);
-										if (!instance_exists(target)) {
-										return;
-									}
                                 
                                 if (variable_global_exists("damage_number_system")) {
                                     global.damage_number_system.add_number(target, effect.magnitude, false);

@@ -14,9 +14,6 @@ if (a_menu_is_open) {
 
 
 event_inherited(); // Handles status effects
-if (!instance_exists(id)) {
-    exit;
-}
 
 // 1. Update all core components
 entity.health.update();
