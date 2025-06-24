@@ -43,7 +43,7 @@ var ai_config = {
 add_component(entity, "ai", create_ai_component(entity, ai_config));
 
 // 7. Add the Status Component
-add_component(entity, "status", create_status_component(entity));
+add_component(entity, "status", create_status_component(entity)); // <-- ADD THIS LINE
 
 // 8. Define the hit function (for visual feedback)
 hit = function() {

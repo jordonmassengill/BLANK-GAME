@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_status_system",
+  "%Name":"scr_status_definitions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_status_system",
+  "name":"scr_status_definitions",
   "parent":{
     "name":"scr_damage",
     "path":"folders/Scripts/scr_damage.yy",

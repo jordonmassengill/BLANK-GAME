@@ -7,7 +7,6 @@ function create_creature_properties() {
 	var props = {
 		// --- Core Systems ---
 		stats: create_stats(),
-		status_manager: create_status_manager(),
 		input: {
 			left: false,
 			right: false,

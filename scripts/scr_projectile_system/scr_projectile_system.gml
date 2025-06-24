@@ -1,7 +1,6 @@
 // In scr_projectile_system
 function create_base_projectile() {
     return {
-        // Base properties
         base_speed: 0,
         base_lifetime: 0,
         base_damage: 0,
@@ -14,7 +13,7 @@ function create_base_projectile() {
         projectile_props: undefined,
         can_hit_player: false,
         is_crit: false,
-        base_radius: undefined,  // Add this for AOE
+        base_radius: undefined,
 
         initialize: function(config) {
             self.base_speed = variable_struct_exists(config, "speed") ? config[$ "speed"] : self.base_speed;
@@ -23,31 +22,15 @@ function create_base_projectile() {
             self.damage_type = variable_struct_exists(config, "damage_type") ? config[$ "damage_type"] : self.damage_type;
             self.element_type = variable_struct_exists(config, "element_type") ? config[$ "element_type"] : self.element_type;
             self.base_radius = variable_struct_exists(config, "base_radius") ? config[$ "base_radius"] : undefined;
-
             self.speed = self.base_speed;
             self.lifetime = self.base_lifetime;
             self.damage = self.base_damage;
-
-            // Create projectile properties, passing base_radius for AOE
-            if (self.element_type != ELEMENT_TYPE.NONE || self.damage_type == DAMAGE_TYPE.AOE) {
-                self.projectile_props = create_projectile_properties(
-                    self.damage,
-                    self.damage_type,
-                    self.element_type,
-                    self.base_radius
-                );
-                if (self.element_type != ELEMENT_TYPE.NONE) {
-                    self.projectile_props = apply_element_properties(self.projectile_props, self.element_type);
-                }
-            }
         },
 
         apply_shooter_stats: function(shooter_obj) {
             if (!variable_instance_exists(shooter_obj, "creature")) return;
             self.shooter = shooter_obj;
             var stats = shooter_obj.creature.stats;
-
-            // Check for and apply crit
             if (stats.crit_ready) {
                 self.is_crit = true;
                 stats.consume_crit();
@@ -63,57 +46,47 @@ function create_base_projectile() {
         },
 
         on_hit: function(target) {
-            if (!variable_instance_exists(target, "entity") || !variable_struct_exists(target.entity, "health")) return false;
+            if (!variable_instance_exists(target, "entity") || !target.entity.has_component("health")) return false;
             if (self.shooter == target) return false;
-
             var final_damage = calculate_damage(self.damage, self.damage_type, target, self.element_type, self.shooter);
-
-            var proj_shooter = self.shooter;
-            var proj_props = self.projectile_props;
-
-            // Apply damage directly to the health component
             var actual_damage = target.entity.health.take_damage(final_damage);
-
-            // Call hit function if it exists
             if (target.entity.health.is_dead) {
-                return true; // Hit was successful, but target is dead.
+                return true;
             }
-
-            // Call hit function if it exists
             if (variable_instance_exists(target, "hit")) {
                 target.hit(final_damage);
             }
-
-            // Show damage numbers
             if (variable_global_exists("damage_number_system")) {
                 global.damage_number_system.add_number(target, final_damage, false);
             }
-
-            // Apply life steal
-            if (proj_shooter != noone &&
-                variable_instance_exists(proj_shooter, "creature") &&
-                variable_struct_exists(proj_shooter.creature, "stats") &&
-                variable_struct_exists(proj_shooter.creature.stats, "get_life_steal") &&
-                variable_instance_exists(proj_shooter, "entity") &&
-                variable_struct_exists(proj_shooter.entity, "health")) {
-
-                var life_steal_amount = proj_shooter.creature.stats.get_life_steal();
+            if (self.shooter != noone && variable_instance_exists(self.shooter, "entity") && self.shooter.entity.has_component("health")) {
+                var life_steal_amount = self.shooter.creature.stats.get_life_steal();
                 if (life_steal_amount > 0) {
                     var heal_amount = actual_damage * life_steal_amount;
-                    proj_shooter.entity.health.heal(heal_amount);
-
-                    // Show healing numbers
+                    self.shooter.entity.health.heal(heal_amount);
                     if (variable_global_exists("damage_number_system")) {
-                        global.damage_number_system.add_number(proj_shooter, heal_amount, true);
+                        global.damage_number_system.add_number(self.shooter, heal_amount, true);
                     }
                 }
             }
-
-            // Apply status effects
-            if (proj_props != undefined) {
-                apply_status_effects(target, proj_props, proj_shooter);
+            
+            // --- DEBUG BLOCK ---
+            show_debug_message("--- On Hit Status Check ---");
+            var element = self.element_type;
+            show_debug_message("1. Projectile Element is: " + string(element));
+            show_debug_message("2. Target definitely has status component (checked before calling).");
+            var status_to_apply = undefined;
+            switch (element) {
+                case ELEMENT_TYPE.FIRE:   status_to_apply = EStatus.Burn;   break;
+                case ELEMENT_TYPE.POISON: status_to_apply = EStatus.Poison; break;
             }
-
+            if (status_to_apply != undefined) {
+                show_debug_message("3. Applying effect: " + string(status_to_apply));
+                target.entity.status.add_effect(status_to_apply, self.shooter);
+            } else {
+                show_debug_message("3. No status to apply for this element.");
+            }
+            
             return true;
         }
     };
