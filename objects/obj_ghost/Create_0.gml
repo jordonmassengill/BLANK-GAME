@@ -7,7 +7,26 @@ entity = {};
 entity.owner_instance = id;
 
 // Health Component
-add_component(entity, "health", create_health_component(200));
+var health_comp = create_health_component(200);
+
+// Define what happens when the ghost dies
+var death_function = method(id, function() {
+    // Give currency to the player (the value is set in scr_specific_enemy_properties)
+    var player = instance_find(obj_player_creature_parent, 0);
+    if (player != noone) {
+        player.creature.currency += creature.currency_value;
+    }
+
+    // This will trigger the Destroy event and then remove the instance
+    instance_destroy();
+});
+
+// Set the callback on the health component
+health_comp.set_death_callback(death_function);
+
+// Now add the configured component to the entity
+add_component(entity, "health", health_comp);
+
 entity.health.max_health = 200;
 entity.health.current_health = 200;
 

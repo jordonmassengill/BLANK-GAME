@@ -12,8 +12,5 @@ if (hit_timer > 0) {
     hit_timer--;
 }
 
-if (entity.movement.xsp > 0) creature.facing_direction = "right";
-if (entity.movement.xsp < 0) creature.facing_direction = "left";
-
 creature.xsp = entity.movement.xsp;
 creature.ysp = entity.movement.ysp;
