@@ -25,6 +25,7 @@ event_inherited();
 
 creature = create_creature_properties();
 creature.facing_direction = "right"; // <-- ADD THIS LINE
+entity = {};
 entity.owner_instance = id;
 add_component(entity, "health", create_health_component(1000));
 creature.input = { left: false, right: false, jump: false, fire: false };

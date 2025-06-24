@@ -197,8 +197,6 @@
     {"id":{"name":"scr_specific_enemy_properties","path":"scripts/scr_specific_enemy_properties/scr_specific_enemy_properties.yy",},},
     {"id":{"name":"scr_state_machine","path":"scripts/scr_state_machine/scr_state_machine.yy",},},
     {"id":{"name":"scr_stats_system","path":"scripts/scr_stats_system/scr_stats_system.yy",},},
-    {"id":{"name":"scr_status_component","path":"scripts/scr_status_component/scr_status_component.yy",},},
-    {"id":{"name":"scr_status_definitions","path":"scripts/scr_status_definitions/scr_status_definitions.yy",},},
     {"id":{"name":"scr_weapon_component","path":"scripts/scr_weapon_component/scr_weapon_component.yy",},},
     {"id":{"name":"shd_grayscale","path":"shaders/shd_grayscale/shd_grayscale.yy",},},
     {"id":{"name":"a1C","path":"sprites/a1C/a1C.yy",},},

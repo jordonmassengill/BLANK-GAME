@@ -46,6 +46,7 @@ function calculate_damage(amount, damage_type, target, element_type, attacker) {
         if (variable_instance_exists(attacker, "is_crit")) {
             if (attacker.is_crit) {
                 crit_mult = attacker.creature.stats.get_crit_multiplier();
+                show_debug_message("Crit applied! Multiplier: " + string(crit_mult));
             }
         }
         

@@ -6,4 +6,4 @@ is_npc = true;
 entity = {};
 entity.owner_instance = id;
 
-add_component(entity, "status", create_status_component(entity)); // <-- ADD THIS LINE
+// Unlike enemies, NPCs don't need detection range or targeting

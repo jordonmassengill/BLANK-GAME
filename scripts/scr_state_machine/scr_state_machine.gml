@@ -49,11 +49,13 @@ function create_state_machine() {
             
             // Validate the new state exists
             if (!variable_struct_exists(states, new_state_name)) {
+                show_debug_message("ERROR: State '" + new_state_name + "' does not exist!");
                 return self;
             }
             
             // Log state change if debugging is enabled
             if (is_debug_enabled) {
+                show_debug_message("STATE CHANGE: " + current_state + " -> " + new_state_name);
             }
             
             // Run on_leave on current state

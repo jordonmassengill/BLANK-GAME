@@ -1,3 +1,5 @@
+event_inherited();
+
 // Now that the object has its variables, we can define its unique ability.
 function apply_effect(target) {
     if (variable_instance_exists(target, "entity") && variable_struct_exists(target.entity, "components") && variable_struct_exists(target.entity.components, "weapon")) {

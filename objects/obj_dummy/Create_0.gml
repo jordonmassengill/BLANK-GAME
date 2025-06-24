@@ -2,6 +2,9 @@
 event_inherited();
 creature = create_dummy_properties();
 
+// --- Component Setup ---
+entity.owner_instance = id; // Ensure the owner is set on the entity
+
 // Add health component (this is already correct)
 add_component(entity, "health", create_health_component(800));
 entity.health.max_health = 800;
