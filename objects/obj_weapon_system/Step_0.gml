@@ -1,4 +1,4 @@
-// obj_weapon_system Step Event - REVISED AND FINAL (V2)
+/*/ obj_weapon_system Step Event - REVISED AND FINAL (V2)
 
 // Loop through all instances in the room once.
 with(all) {
@@ -28,7 +28,4 @@ if (_input.fire) {
 /*
 if (_input.alt_fire) {
     entity.weapon.fire(); 
-}
-*/
-    }
 }

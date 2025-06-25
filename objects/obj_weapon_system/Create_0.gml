@@ -1,4 +1,4 @@
-// Create Event of obj_weapon_system
+/*/ Create Event of obj_weapon_system
 // REVISED shoot_projectile function
 function shoot_projectile(config) {
     var shooter = config.shooter;

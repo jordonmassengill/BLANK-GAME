@@ -1,6 +1,8 @@
 // obj_game_init Create Event
 window_set_size(1920, 1080);
 
+global.weapon_defs = get_weapon_definitions();
+
 // Initialize systems
 instance_create_layer(0, 0, "Instances", obj_pause_controller);
 instance_create_layer(0, 0, "Instances", obj_stats_menu);

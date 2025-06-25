@@ -23,6 +23,12 @@ entity.health.update();
 entity.movement.update(); // This now handles all state changes, physics, and jump cooldowns
 entity.weapon.update();   // This updates weapon cooldowns
 
+// --- ADD THIS BLOCK TO FIX FIRING ---
+// Check for fire input and call the component's fire method.
+if (creature.input.fire) {
+    entity.weapon.fire();
+}
+
 
 // --- NEW LOGIC: PLAYER CONTACT DAMAGE ---
 if (!variable_instance_exists(id, "damage_cooldown")) {
