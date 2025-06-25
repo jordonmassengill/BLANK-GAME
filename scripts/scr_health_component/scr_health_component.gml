@@ -78,14 +78,19 @@ function create_health_component(max_hp = 100) {
         },
         
         update: function(delta_time = 1/60) {
-            // Skip if dead
-            if (is_dead) return;
-            
-            // Apply regeneration
-            if (regen_rate > 0) {
-                heal(regen_rate * delta_time);
-            }
-        },
+		    // Skip if dead
+		    if (is_dead) return;
+    
+		    // --- THIS IS THE CORRECT CODE FOR THIS FILE ---
+		    // Apply regeneration if the owner has stats
+		    if (owner_instance != undefined && variable_instance_exists(owner_instance, "creature")) {
+		        var regen_stat = owner_instance.creature.stats.get_health_regen();
+		        if (regen_stat > 0) {
+		            // Call this component's own heal() method
+		            self.heal(regen_stat * delta_time);
+		        }
+		    }
+		},
         
         set_max_health: function(new_max) {
             // Calculate health percent before change

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_health_system",
+  "%Name":"scr_combat_effects",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_health_system",
+  "name":"scr_combat_effects",
   "parent":{
     "name":"scr_damage",
     "path":"folders/Scripts/scr_damage.yy",

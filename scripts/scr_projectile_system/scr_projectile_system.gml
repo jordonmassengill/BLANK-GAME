@@ -152,7 +152,7 @@ function apply_aoe_damage(xx, yy, source, base_radius, base_damage, element_type
                 if (variable_instance_exists(target, "creature")) {
                     // Calculate and apply damage
                     var damage = calculate_damage(base_damage, DAMAGE_TYPE.AOE, target, element_type, source);
-                    global.health_system.damage_creature(target, damage);
+                    target.entity.health.take_damage(damage);
                     
                     // Apply element effects if any
                     if (proj_props != undefined) {

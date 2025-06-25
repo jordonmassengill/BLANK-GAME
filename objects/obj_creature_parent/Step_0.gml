@@ -32,3 +32,7 @@ if (variable_instance_exists(id, "creature")) {
         creature.input.fire = false;
     }
 }
+
+if (variable_instance_exists(id, "entity") && entity.has_component("health")) {
+    entity.health.update();
+}

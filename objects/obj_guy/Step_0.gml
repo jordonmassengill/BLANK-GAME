@@ -23,6 +23,31 @@ entity.health.update();
 entity.movement.update(); // This now handles all state changes, physics, and jump cooldowns
 entity.weapon.update();   // This updates weapon cooldowns
 
+
+// --- NEW LOGIC: PLAYER CONTACT DAMAGE ---
+if (!variable_instance_exists(id, "damage_cooldown")) {
+    damage_cooldown = 0;
+}
+if (damage_cooldown > 0) {
+    damage_cooldown--;
+}
+
+if (damage_cooldown <= 0) {
+    var collided_enemy = instance_place(x, y, obj_enemy_parent);
+    if (collided_enemy != noone) {
+        // Apply contact damage to self
+        entity.health.take_damage(10); 
+        damage_cooldown = 30; // 0.5 second invulnerability
+
+        // Apply knockback to self
+        var kb_dir = point_direction(collided_enemy.x, collided_enemy.y, x, y);
+        var knock_h = lengthdir_x(3, kb_dir);
+        var knock_v = min(-2, lengthdir_y(3, kb_dir));
+        entity.movement.apply_knockback(knock_h, knock_v);
+    }
+}
+
+// --- END NEW LOGIC ---
 // 2. Handle non-component logic
 // Update hit timer
 if (hit_timer > 0) {

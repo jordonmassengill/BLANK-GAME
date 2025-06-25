@@ -103,3 +103,4 @@ function calculate_damage(amount, damage_type, target, element_type, attacker) {
     
     return final_damage;
 }
+
