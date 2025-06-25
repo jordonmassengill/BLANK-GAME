@@ -261,7 +261,7 @@ for (var i = 0; i < array_length(stats_list); i++) {
 // =================================================================
 // DRAW INVENTORY SECTION (v3 - Styled with Stacking)
 // =================================================================
-if (player != noone && variable_instance_exists(player, "entity") && variable_struct_exists(player.entity, "inventory")) {
+if (player != noone && variable_instance_exists(player, "entity") && is_struct(player.entity) && variable_struct_exists(player.entity, "inventory")) {
     
     // --- Get Inventory Summary & Define Layout ---
     // We now use get_inventory_summary() to get a clean, aggregated list of items.

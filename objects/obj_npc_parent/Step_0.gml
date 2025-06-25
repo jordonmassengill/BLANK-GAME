@@ -14,6 +14,7 @@ if (variable_instance_exists(id, "entity") &&
 // If dead, destroy the instance
 if (is_dead) {
     // Reset any active status effects
+    // The 'creature' struct is now guaranteed to exist, so this is safe.
     if (variable_struct_exists(creature, "status_manager")) {
         creature.status_manager.clear_effects();
     }
