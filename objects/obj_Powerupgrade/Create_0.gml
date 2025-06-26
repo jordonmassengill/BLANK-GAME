@@ -1,9 +1,3 @@
-// The new, simplified Create Event for obj_Lifeupgrade
-event_inherited(); // Inherits from obj_pickup_parent
-
-// This is all the logic we need now!
-function apply_effect(target) {
-    // Just tell the target's inventory to add a "life_orb"
-    // The inventory component itself knows what that means.
-    return target.entity.inventory.add_item("orb_power");
-}
+//create event for obj_lifeupgrade
+event_inherited();
+orb_id_to_give = "orb_power";

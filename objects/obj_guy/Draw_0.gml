@@ -1,4 +1,5 @@
 // obj_guy Draw Event
+event_inherited(); 
 
 // Apply direction flip
 image_xscale = sprite_direction;
@@ -18,8 +19,3 @@ switch(anim_state) {
 
 // Draw the sprite
 draw_self();
-
-// Draw health bar using the component system
-if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
-	entity.health.draw_health_bar();
-}

@@ -1,15 +1,12 @@
 // obj_Martin Draw Event
 // Set facing direction based on the creature's properties
+event_inherited(); 
+
 if (variable_instance_exists(id, "creature")) {
     image_xscale = (creature.facing_direction == "right" ? 1 : -1);
 }
 
 draw_self();
-
-// Draw health bar using component system
-if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
-    entity.health.draw_health_bar();
-}
 
 // Draw shop menu if active
 if (variable_instance_exists(id, "shop_menu") && shop_menu[? "active"]) {

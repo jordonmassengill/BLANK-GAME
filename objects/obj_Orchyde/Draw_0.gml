@@ -1,4 +1,5 @@
 // Draw Event of obj_Orchyde
+event_inherited(); 
 
 // Set facing direction based on the creature's properties
 image_xscale = (creature.facing_direction == "right" ? 1 : -1);
@@ -34,8 +35,3 @@ if (sprite_index != _new_sprite) {
 
 // Draw the object with its new sprite
 draw_self();
-
-// Draw health bar (unchanged)
-if (variable_instance_exists(id, "entity") && variable_struct_exists(entity, "health")) {
-	entity.health.draw_health_bar();
-}

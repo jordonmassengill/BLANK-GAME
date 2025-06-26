@@ -1,33 +1,33 @@
 // File: objects/obj_pickup_parent/Create_0.gml
-
 // Initialize the cooldown timer for this pickup
 pickup_cooldown = 0;
 
-// This is the new, corrected function in obj_pickup_parent's Create Event.
-// You can replace the previous debug version with this one.
-
 function apply_effect(target) {
     
-    // Check if this pickup is meant to give a weapon
+    // --- Weapon Pickup Logic (This part is already correct) ---
     if (variable_instance_exists(id, "weapon_id_to_give")) {
-        
-        // --- START OF FIX ---
-        // This is a more direct and robust way to check if the player is ready.
-        // It avoids the race condition by checking for the structs themselves.
         if (variable_instance_exists(target, "entity") && 
             variable_struct_exists(target.entity, "components") && 
             variable_struct_exists(target.entity.components, "weapon")) {
             
-            // Success! The player is fully initialized.
             return target.entity.weapon.pickup_weapon(weapon_id_to_give, object_index);
-            
-        } else {
-            // The player isn't ready yet. Fail gracefully and try again next frame.
-            return false;
         }
-        // --- END OF FIX ---
+        return false;
     }
     
-    // This part is for non-weapon pickups, which will have their own apply_effect functions.
+    // --- Orb Pickup Logic (This is the fixed part) ---
+    if (variable_instance_exists(id, "orb_id_to_give")) {
+        
+        // This is the more robust check that avoids the race condition.
+        if (variable_instance_exists(target, "entity") && 
+            variable_struct_exists(target.entity, "components") && 
+            variable_struct_exists(target.entity.components, "inventory")) {
+                
+            return target.entity.inventory.add_item(orb_id_to_give);
+        }
+        return false;
+    }
+    
+    // If the pickup is neither a weapon nor an orb, do nothing.
     return false;
 }
