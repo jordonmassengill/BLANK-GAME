@@ -90,19 +90,18 @@ function create_weapon_component(owner_entity) {
             }
 
             // --- NEW SPAWN OFFSET LOGIC ---
-            var offset_h = weapon_def.spawn_offset_h ?? 0;
-            var offset_v = weapon_def.spawn_offset_v ?? 0;
-            
-            var offset_x_final = lengthdir_x(offset_h, aim_angle);
-            var offset_y_final = lengthdir_y(offset_h, aim_angle) + offset_v;
-            
-            // This special case prevents vertical offset from being ignored when firing perfectly horizontally.
-            if (aim_angle == 0 || aim_angle == 180) {
-                offset_y_final = offset_v;
-            }
+            // Get spawn properties from the weapon definition
+			var spawn_radius = weapon_def.spawn_radius ?? 16;
+			var bubble_v_offset = weapon_def.bubble_v_offset ?? 0; // Get the new offset
 
-            var spawn_x = inst.x + offset_x_final;
-            var spawn_y = inst.y + offset_y_final;
+			// Define the center of the bubble, applying the vertical offset
+			var bubble_center_x = inst.x;
+			var bubble_center_y = inst.y + bubble_v_offset;
+
+			// Calculate the final spawn position on the edge of the *offset* bubble
+			var spawn_x = bubble_center_x + lengthdir_x(spawn_radius, aim_angle);
+			var spawn_y = bubble_center_y + lengthdir_y(spawn_radius, aim_angle);
+
             // --- END OF NEW LOGIC ---
 
             var proj_obj = weapon_def.projectile_object;

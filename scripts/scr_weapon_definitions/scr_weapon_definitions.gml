@@ -9,50 +9,50 @@ function get_weapon_definitions() {
             projectile_object: obj_fireball,
             base_cooldown: 15,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: 0,
         },
         bomb: {
             projectile_object: obj_bomb,
             base_cooldown: 120,
             fire_pattern: "arc",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: -1,
         },
         dart: {
             projectile_object: obj_dart,
             base_cooldown: 100,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: -1,
         },
         waterball: {
             projectile_object: obj_waterball,
             base_cooldown: 100,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 16,
+			bubble_v_offset: -5,
         },
         iceball: {
             projectile_object: obj_iceball,
             base_cooldown: 100,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: -1,
         },
         electro: {
             projectile_object: obj_electro,
             base_cooldown: 20,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: -3,
         },
         ghoststrike: {
             projectile_object: obj_ghoststrike,
             base_cooldown: 10,
             fire_pattern: "single",
-            spawn_offset_h: 12, // CORRECTED: Original value
-            spawn_offset_v: 0,  // CORRECTED: Original value
+            spawn_radius: 24,
+			bubble_v_offset: -1,
         },
 
         //======================================================================
@@ -62,8 +62,8 @@ function get_weapon_definitions() {
             projectile_object: obj_ghostball,
             base_cooldown: 180,
             fire_pattern: "single",
-            spawn_offset_h: 12,  // CORRECTED: Matching standard horizontal distance
-            spawn_offset_v: -16, // This was the original vertical_offset
+            spawn_radius: 24,
+			bubble_v_offset: -1,
         },
         shotgun: {
             projectile_object: obj_shotgun_pellet,
@@ -71,8 +71,8 @@ function get_weapon_definitions() {
             fire_pattern: "spread",
             pellet_count: 5,
             spread_angle: 30,
-            spawn_offset_h: 12,  // CORRECTED: Matching standard horizontal distance
-            spawn_offset_v: 0,   // CORRECTED: Shotgun also had no vertical offset
+            spawn_radius: 15,
+			bubble_v_offset: -1,
         },
         orchyde_melee: {
             projectile_object: obj_Orchyde_melee_hitbox,
