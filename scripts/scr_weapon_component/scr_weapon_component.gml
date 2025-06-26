@@ -105,36 +105,37 @@ function create_weapon_component(owner_entity) {
             // --- END OF NEW LOGIC ---
 
             var proj_obj = weapon_def.projectile_object;
+			var proj; 
             
             switch (weapon_def.fire_pattern) {
-                case "single":
-                    var proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // USE new spawn coords
-                    proj.projectile.apply_shooter_stats(inst);
-                    proj.direction = aim_angle;
-                    proj.image_angle = aim_angle;
-                    shot_fired = true;
-                    break;
-                    
-                case "spread":
-                    for (var i = 0; i < weapon_def.pellet_count; i++) {
-                        var final_angle = aim_angle + random_range(-weapon_def.spread_angle / 2, weapon_def.spread_angle / 2);
-                        var proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // USE new spawn coords
-                        proj.projectile.apply_shooter_stats(inst);
-                        proj.direction = final_angle;
-                        proj.image_angle = final_angle;
-                    }
-                    shot_fired = true;
-                    break;
-                    
-                case "arc":
-                    var proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // USE new spawn coords
-                    proj.projectile.apply_shooter_stats(inst);
-                    proj.direction = aim_angle;
-                    proj.image_angle = aim_angle;
-                    proj.vspeed = -3.3;
-                    proj.gravity = 0.08;
-                    shot_fired = true;
-                    break;
+			    case "single":
+			        proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // Assign without 'var'
+			        proj.projectile.apply_shooter_stats(inst);
+			        proj.direction = aim_angle;
+			        proj.image_angle = aim_angle;
+			        shot_fired = true;
+			        break;
+        
+			    case "spread":
+			        for (var i = 0; i < weapon_def.pellet_count; i++) {
+			            var final_angle = aim_angle + random_range(-weapon_def.spread_angle / 2, weapon_def.spread_angle / 2);
+			            proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // Assign without 'var'
+			            proj.projectile.apply_shooter_stats(inst);
+			            proj.direction = final_angle;
+			            proj.image_angle = final_angle;
+			        }
+			        shot_fired = true;
+			        break;
+        
+			    case "arc":
+			        proj = instance_create_layer(spawn_x, spawn_y, "Instances", proj_obj); // Assign without 'var'
+			        proj.projectile.apply_shooter_stats(inst);
+			        proj.direction = aim_angle;
+			        proj.image_angle = aim_angle;
+			        proj.vspeed = -3.3;
+			        proj.gravity = 0.08;
+			        shot_fired = true;
+			        break;
                 
                 case "melee":
                     // Melee uses its own offset from the definition.

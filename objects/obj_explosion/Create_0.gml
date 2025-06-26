@@ -1,6 +1,4 @@
 // obj_explosion Create Event (parent = obj_projectile_parent)
-event_inherited();
-
 creator = noone;
 damage_type = DAMAGE_TYPE.AOE;
 element_type = ELEMENT_TYPE.FIRE;

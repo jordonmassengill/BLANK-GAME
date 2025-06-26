@@ -5,9 +5,6 @@ event_inherited();
 creature = create_player_properties();
 is_main_player = true;
 
-// Set up entity with components
-entity = {};
-entity.owner_instance = id;
 
 // --- COMPONENT SETUP ---
 // Add Health Component (with death callback)
@@ -57,3 +54,5 @@ hit = function(damage_amount = 0) {
 	}
 	return true;
 }
+
+damage_cooldown = 0;

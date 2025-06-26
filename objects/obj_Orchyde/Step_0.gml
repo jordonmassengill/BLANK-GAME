@@ -1,5 +1,4 @@
 // obj_Orchyde Step Event
-
 event_inherited(); // Handles parent logic, which can include death from DOT
 
 // --- THIS IS THE DEFINITIVE FIX ---

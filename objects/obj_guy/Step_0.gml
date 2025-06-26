@@ -31,9 +31,6 @@ if (creature.input.fire) {
 
 
 // --- NEW LOGIC: PLAYER CONTACT DAMAGE ---
-if (!variable_instance_exists(id, "damage_cooldown")) {
-    damage_cooldown = 0;
-}
 if (damage_cooldown > 0) {
     damage_cooldown--;
 }

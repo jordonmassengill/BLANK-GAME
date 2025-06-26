@@ -24,9 +24,7 @@ function martin_patrol_update() {
 event_inherited();
 
 creature = create_creature_properties();
-creature.facing_direction = "right"; // <-- ADD THIS LINE
-entity = {};
-entity.owner_instance = id;
+creature.facing_direction = "right";
 add_component(entity, "health", create_health_component(1000));
 creature.input = { left: false, right: false, jump: false, fire: false };
 add_component(entity, "movement", create_movement_component(entity, creature.stats));
