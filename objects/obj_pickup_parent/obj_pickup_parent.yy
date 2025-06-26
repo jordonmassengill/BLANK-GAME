@@ -37,9 +37,6 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":null,
-  "spriteMaskId":{
-    "name":"sPickupCollisionMask",
-    "path":"sprites/sPickupCollisionMask/sPickupCollisionMask.yy",
-  },
+  "spriteMaskId":null,
   "visible":true,
 }

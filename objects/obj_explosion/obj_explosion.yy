@@ -15,10 +15,7 @@
     "name":"Player Projectiles",
     "path":"folders/Objects/obj_Projectiles/Player Projectiles.yy",
   },
-  "parentObjectId":{
-    "name":"obj_player_projectile_parent",
-    "path":"objects/obj_player_projectile_parent/obj_player_projectile_parent.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

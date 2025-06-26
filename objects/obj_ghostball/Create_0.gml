@@ -1,5 +1,6 @@
 // obj_ghostball Create Event (parent = obj_enemt_projectile_parent)
 event_inherited();  // Get parent object's create event
+projectile.can_hit_player = true;
 
 projectile.initialize({
     speed: 6,
